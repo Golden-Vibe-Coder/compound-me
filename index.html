@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compound Me - Simple Calculator</title>
+  <style>
+    body {
+      background: #f8fafc;
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px 0 #0001;
+      max-width: 400px;
+      width: 95vw;
+      margin: 2rem 0;
+      padding: 2rem 1.5rem 1.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 0.2em;
+    }
+    .subtitle {
+      text-align: center;
+      color: #475569;
+      margin-bottom: 1.2em;
+      font-size: 1.05em;
+    }
+    label {
+      font-weight: 500;
+      margin-bottom: 0.2em;
+      display: block;
+    }
+    .optional {
+      font-size: 0.8em;
+      color: #64748b;
+      margin-left: 0.5em;
+      font-weight: 400;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 0.1em 0.5em;
+      background: #f1f5f9;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.7em;
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1em;
+      background: #f9fafb;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 0.9em;
+      background: #18181b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.5em;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #27272a;
+    }
+    .results {
+      margin-top: 2em;
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 1.2em;
+      color: #18181b;
+      font-size: 1.05em;
+    }
+    .results strong {
+      display: block;
+      margin-bottom: 0.3em;
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Compound Me</h1>
+    <div class="subtitle">Calculate how much your investments can grow over time.</div>
+    <form id="calc-form" autocomplete="off">
+      <label for="starting">Starting Investment ($)<span style="color:#ef4444">*</span></label>
+      <input type="number" id="starting" required min="0" step="any">
+
+      <label for="contribution">Monthly Contribution ($)<span class="optional">optional</span></label>
+      <input type="number" id="contribution" min="0" step="any">
+
+      <label for="expense">Expense Ratio (%)<span class="optional">optional</span></label>
+      <input type="number" id="expense" min="0" step="any" placeholder="e.g. 0.09">
+
+      <label for="aum">AUM Fee (%)<span class="optional">optional</span></label>
+      <input type="number" id="aum" min="0" step="any" placeholder="e.g. 1">
+
+      <label for="return">Annual Rate of Return (%)<span style="color:#ef4444">*</span></label>
+      <input type="number" id="return" required min="0" step="any">
+
+      <label for="years">Number of Years<span style="color:#ef4444">*</span></label>
+      <input type="number" id="years" required min="1" max="50">
+
+      <label for="inflation">Inflation (%)<span class="optional">optional</span></label>
+      <input type="number" id="inflation" min="0" step="any" placeholder="e.g. 2">
+
+      <label for="reinvest">Reinvest Dividends?<span class="optional">optional</span></label>
+      <select id="reinvest">
+        <option value="yes" selected>Yes</option>
+        <option value="no">No</option>
+      </select>
+
+      <button type="submit">Calculate</button>
+    </form>
+    <div id="results" class="results" style="display:none"></div>
+  </div>
+  <script>
+    function formatCurrency(n) {
+      return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    }
+    function formatPercent(n, digits = 2) {
+      return n.toFixed(digits) + '%';
+    }
+    function calculateCompound(params) {
+      const {
+        startingBalance,
+        monthlyContribution,
+        grossAnnualReturn,
+        expenseRatio = 0,
+        aumFee = 0,
+        years,
+        reinvestDividends,
+        inflation = 0,
+      } = params;
+      const gross = grossAnnualReturn / 100;
+      const expense = expenseRatio / 100;
+      const aum = aumFee / 100;
+      let effectiveAnnual = gross - expense - aum - (inflation / 100);
+      effectiveAnnual = Math.max(effectiveAnnual, 0);
+      const monthlyRate = Math.pow(1 + effectiveAnnual, 1 / 12) - 1;
+      let balance = startingBalance;
+      let totalContributions = startingBalance;
+      let totalInterest = 0;
+      for (let year = 1; year <= years; year++) {
+        for (let month = 1; month <= 12; month++) {
+          const interest = balance * monthlyRate;
+          balance += interest + monthlyContribution;
+          totalInterest += interest;
+          totalContributions += monthlyContribution;
+        }
+      }
+      return {
+        finalBalance: balance,
+        totalContributions,
+        totalInterest,
+        effectiveAnnual: effectiveAnnual * 100,
+      };
+    }
+    document.getElementById('calc-form').onsubmit = function(e) {
+      e.preventDefault();
+      const startingBalance = parseFloat(document.getElementById('starting').value) || 0;
+      const monthlyContribution = parseFloat(document.getElementById('contribution').value) || 0;
+      const expenseRatio = parseFloat(document.getElementById('expense').value) || 0;
+      const aumFee = parseFloat(document.getElementById('aum').value) || 0;
+      const grossAnnualReturn = parseFloat(document.getElementById('return').value) || 0;
+      const years = parseInt(document.getElementById('years').value, 10) || 0;
+      const inflation = parseFloat(document.getElementById('inflation').value) || 0;
+      const reinvestDividends = document.getElementById('reinvest').value === 'yes';
+      if (!startingBalance || !grossAnnualReturn || !years) {
+        alert('Please fill all required fields.');
+        return;
+      }
+      const results = calculateCompound({
+        startingBalance,
+        monthlyContribution,
+        grossAnnualReturn,
+        expenseRatio,
+        aumFee,
+        years,
+        reinvestDividends,
+        inflation,
+      });
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = `
+        <strong>Final Balance:</strong> ${formatCurrency(results.finalBalance)}<br>
+        <strong>Total Contributions:</strong> ${formatCurrency(results.totalContributions)}<br>
+        <strong>Total Interest Earned:</strong> ${formatCurrency(results.totalInterest)}<br>
+        <div style="margin-top:0.7em;font-size:0.97em;color:#475569;">Over ${years} years at ${formatPercent(results.effectiveAnnual)} effective annual return.</div>
+      `;
+      resultsDiv.style.display = 'block';
+    };
+  </script>
+</body>
+</html>

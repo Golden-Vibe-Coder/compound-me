@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Compound Me (Standalone Version)
 
-## Getting Started
+A simple, mobile-friendly compound interest calculator for investors. This version is a single HTML file that works instantly on any device—no frameworks, build tools, or servers required.
 
-First, run the development server:
+## Features
+- Calculate compound growth with:
+  - Starting investment (required)
+  - Monthly contribution (optional)
+  - Expense ratio (optional)
+  - AUM fee (optional)
+  - Annual rate of return (required)
+  - Number of years (required)
+  - Inflation (optional)
+  - Reinvest dividends (optional, defaults to Yes)
+- Results display final balance, total contributions, and total interest earned.
+- Modern, mobile-first design.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Usage
+1. Open `public/index.html` in any web browser (desktop or mobile).
+2. Fill in your investment parameters and click **Calculate**.
+3. Results will appear instantly below the form.
+
+## How to Deploy or Share
+- You can host this HTML file on any web server, or simply open it directly from your file system.
+- To use on your phone, AirDrop, email, or upload the file to your device and open in your browser.
+
+## Why Standalone?
+This version was created for maximum compatibility and simplicity after troubleshooting mobile browser issues with React/Next.js. It requires no dependencies and works everywhere.
+
+## File Structure
+```
+public/
+  index.html                  # The app (open this!)
+  icons8-investing-64.png      # (Optional) Favicon or branding
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+MIT
