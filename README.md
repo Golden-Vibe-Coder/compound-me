@@ -5,7 +5,7 @@ A simple, mobile-friendly compound interest calculator for investors. This versi
 ## Features
 - Calculate compound growth with:
   - Starting investment (required)
-  - Monthly contribution (optional)
+  - Annual contribution (optional)
   - Expense ratio (optional)
   - AUM fee (optional)
   - Annual rate of return (required)
@@ -31,7 +31,10 @@ This version was created for maximum compatibility and simplicity after troubles
 ```
 public/
   index.html                  # The app (open this!)
-  icons8-investing-64.png      # (Optional) Favicon or branding
+  icons8-investing-64.png      # App icon (favicon/branding, required)
+## Attribution
+
+App icon by [Icons8](https://icons8.com/icon/8n6z6pR9QFqC/investing). Attribution required by Icons8.
 ```
 
 ## License
