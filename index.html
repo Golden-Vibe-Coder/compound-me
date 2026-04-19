@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+  <!DOCTYPE html>
+    <html lang="en">
 <head>
       <meta name="description" content="Compound Interest Calculator">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -30,10 +30,10 @@
       max-width: 400px;
       width: 95vw;
       margin: 0 auto 0 auto;
-      padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+      padding: 0.7rem 0.7rem 1.1rem 0.7rem;
       display: flex;
       flex-direction: column;
-      gap: 0.7rem;
+      gap: 0.4rem;
     }
     .row {
       display: flex;
@@ -69,13 +69,13 @@
     }
     h1 {
       text-align: center;
-      margin-top: 0.2em;
-      margin-bottom: 0.2em;
+      margin-top: 0.1em;
+      margin-bottom: 0.1em;
     }
     .subtitle {
       text-align: center;
       color: #475569;
-      margin-bottom: 1.2em;
+      margin-bottom: 0.7em;
       font-size: 1.05em;
     }
     label {
@@ -93,6 +93,20 @@
       padding: 0.1em 0.5em;
       background: #f1f5f9;
     }
+      .inline-error {
+        color: #dc2626;
+        font-weight: 500;
+        margin-bottom: 0.08em;
+        display: flex;
+        align-items: center;
+        gap: 0.25em;
+        font-size: 1em;
+        margin-top: 0;
+      }
+      .input-error {
+        border: 2px solid #dc2626 !important;
+        box-shadow: none !important;
+      }
     input, select {
       width: 100%;
       padding: 0.7em;
@@ -103,6 +117,20 @@
       font-size: 1em;
       background: #f9fafb;
       box-sizing: border-box;
+      transition: border 0.15s;
+    }
+    form#calc-form input.input-error,
+    form#calc-form input.input-error:focus,
+    form#calc-form input.input-error:active {
+      border-width: 2px !important;
+      border-style: solid !important;
+      border-color: #dc2626 !important;
+      color: #dc2626 !important;
+      box-shadow: none !important;
+      outline: none !important;
+      background: #fff !important;
+      z-index: 2;
+      caret-color: #dc2626 !important;
     }
     button {
       width: 100%;
@@ -121,10 +149,10 @@
       background: #27272a;
     }
     .results {
-      margin-top: 2em;
+      margin-top: 1.1em;
       background: #f1f5f9;
       border-radius: 12px;
-      padding: 1.2em;
+      padding: 1.1em;
       color: #18181b;
       font-size: 1.05em;
     }
@@ -147,42 +175,38 @@
     <form id="calc-form" autocomplete="off">
 
       <label for="starting">Starting Investment ($)<span style="color:#ef4444">*</span></label>
-      <input type="text" id="starting" required inputmode="decimal" pattern="[0-9,\.]*">
+      <input type="text" id="starting" inputmode="decimal" pattern="[0-9,\.]*" autocomplete="off" aria-required="true">
 
       <label for="contribution">Annual Contribution ($)</label>
       <input type="text" id="contribution" inputmode="decimal" pattern="[0-9,\.]*">
 
       <div class="row">
-        <div>
-          <label for="expense">Exp Ratio (%)</label>
-          <input type="number" id="expense" class="small-input" min="0" step="any" placeholder="e.g. 0.09">
+        <div style="flex:1;">
+          <label for="return">Annual Return (%)<span style="color:#ef4444">*</span></label>
+          <input type="number" id="return" min="0" step="any" class="small-input" autocomplete="off" aria-required="true" inputmode="decimal">
         </div>
-        <div>
-          <label for="aum">AUM Fee (%)</label>
-          <input type="number" id="aum" class="small-input" min="0" step="any" placeholder="e.g. 1">
-        </div>
-        <div>
-          <label for="inflation">Inflation (%)</label>
-          <input type="number" id="inflation" class="small-input" min="0" step="any" placeholder="e.g. 2">
-        </div>
+      </div>
+      <div>
+        <label for="years">Number of Years<span style="color:#ef4444">*</span></label>
+        <input type="number" id="years" min="1" max="300" class="small-input" autocomplete="off" aria-required="true" inputmode="decimal">
+
+      <div>
+        <label for="inflation">Inflation (%)</label>
+        <input type="number" id="inflation" class="small-input" min="0" step="any" inputmode="decimal">
+      </div>
       </div>
 
       <div class="row">
         <div>
-          <label for="return">Annual Return (%)<span style="color:#ef4444">*</span></label>
-          <input type="number" id="return" required min="0" step="any" class="small-input">
+          <label for="expense">Exp Ratio (%)</label>
+          <input type="number" id="expense" class="small-input" min="0" step="any" placeholder="e.g. 0.09" inputmode="decimal">
         </div>
         <div>
-          <label for="years">Number of Years<span style="color:#ef4444">*</span></label>
-          <input type="number" id="years" required min="1" max="300" class="small-input">
+          <label for="aum">AUM Fee (%)</label>
+          <input type="number" id="aum" class="small-input" min="0" step="any" inputmode="decimal">
         </div>
       </div>
 
-      <label for="reinvest">Reinvest Dividends?</label>
-      <select id="reinvest">
-        <option value="yes" selected>Yes</option>
-        <option value="no">No</option>
-      </select>
 
       <button type="submit">Calculate</button>
     </form>
@@ -238,7 +262,6 @@
         expenseRatio = 0,
         aumFee = 0,
         years,
-        reinvestDividends,
         inflation = 0,
       } = params;
       const gross = grossAnnualReturn / 100;
@@ -268,18 +291,52 @@
     }
     document.getElementById('calc-form').onsubmit = function(e) {
       e.preventDefault();
-      const startingBalance = parseFloat(document.getElementById('starting').value.replace(/,/g, '')) || 0;
+      // Remove previous error messages
+        // Remove previous error messages and error borders
+        document.querySelectorAll('.inline-error').forEach(el => el.remove());
+        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+      let hasError = false;
+      // Helper to show error
+      function showError(input, message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'inline-error';
+        errorDiv.innerHTML = `<img src="Icons/icons8-error-50.png" alt="Error" style="width:1.1em;vertical-align:middle;margin-right:0.3em;"> <span>${message}</span>`;
+        errorDiv.style.color = '#dc2626';
+        errorDiv.style.fontWeight = '500';
+        errorDiv.style.marginBottom = '0.2em';
+        errorDiv.style.display = 'flex';
+        errorDiv.style.alignItems = 'center';
+        errorDiv.style.gap = '0.3em';
+        errorDiv.style.fontSize = '1em';
+        input.parentNode.insertBefore(errorDiv, input);
+      }
+      // Validate required fields
+      const startingInput = document.getElementById('starting');
+      const returnInput = document.getElementById('return');
+      const yearsInput = document.getElementById('years');
+      let startingBalance = parseFloat(startingInput.value.replace(/,/g, ''));
+      let grossAnnualReturn = parseFloat(returnInput.value);
+      let years = parseInt(yearsInput.value, 10);
+      if (!startingInput.value.trim()) {
+        showError(startingInput, 'This field cannot be blank');
+        hasError = true;
+      }
+      if (!returnInput.value.trim()) {
+        showError(returnInput, 'This field cannot be blank');
+        hasError = true;
+      }
+      if (!yearsInput.value.trim()) {
+        showError(yearsInput, 'This field cannot be blank');
+        hasError = true;
+      }
+      if (hasError) return;
+      startingBalance = startingBalance || 0;
+      grossAnnualReturn = grossAnnualReturn || 0;
+      years = years || 0;
       const annualContribution = parseFloat(document.getElementById('contribution').value.replace(/,/g, '')) || 0;
       const expenseRatio = parseFloat(document.getElementById('expense').value) || 0;
       const aumFee = parseFloat(document.getElementById('aum').value) || 0;
-      const grossAnnualReturn = parseFloat(document.getElementById('return').value) || 0;
-      const years = parseInt(document.getElementById('years').value, 10) || 0;
       const inflation = parseFloat(document.getElementById('inflation').value) || 0;
-      const reinvestDividends = document.getElementById('reinvest').value === 'yes';
-      if (!startingBalance || !grossAnnualReturn || !years) {
-        alert('Please fill all required fields.');
-        return;
-      }
       const results = calculateCompound({
         startingBalance,
         annualContribution,
@@ -287,7 +344,6 @@
         expenseRatio,
         aumFee,
         years,
-        reinvestDividends,
         inflation,
       });
       const resultsDiv = document.getElementById('results');
@@ -312,20 +368,161 @@
           // AUM only
           const interestAumOnly = balanceAumOnly * (Math.pow(1 + (gross - aum), 1/12) - 1);
           balanceAumOnly += interestAumOnly + monthlyContribution;
+          // Both fees
+          if (year === 1 && month === 1) {
+            var balanceBothFees = startingBalance;
+          }
+          const interestBothFees = balanceBothFees * (Math.pow(1 + (gross - expense - aum), 1/12) - 1);
+          balanceBothFees += interestBothFees + monthlyContribution;
         }
       }
       const lostToExpense = balanceNoFees - balanceExpenseOnly;
       const lostToAum = balanceNoFees - balanceAumOnly;
-      const feesLost = balanceNoFees - results.finalBalance;
+      let feesLost;
+      if (expense > 0 && aum > 0) {
+        feesLost = balanceNoFees - balanceBothFees;
+      } else if (expense > 0) {
+        feesLost = lostToExpense;
+      } else if (aum > 0) {
+        feesLost = lostToAum;
+      } else {
+        feesLost = 0;
+      }
       resultsDiv.innerHTML = `
+        <div style="margin-bottom:0.7em;font-size:0.97em;color:#475569;">Over ${years} years at ${formatPercent(results.effectiveAnnual)} effective annual return:</div>
         <div><strong>Total Contributions:</strong><span style="padding-left:10px;">${formatCurrency(results.totalContributions)}</span></div>
         <div style="margin-top:8px;"><strong>Total Interest Earned:</strong><span style="padding-left:10px;">${formatCurrency(results.totalInterest)}</span></div>
         <div style="margin-top:8px;"><strong>Final Balance:</strong><span style="padding-left:10px;">${formatCurrency(results.finalBalance)}</span></div>
-        <div style="margin-top:0.7em;font-size:0.97em;color:#475569;">Over ${years} years at ${formatPercent(results.effectiveAnnual)} effective annual return.</div>
-        <div style="font-size:0.97em;color:#64748b;margin-top:0.5em;">Lost to Exp Ratio: <strong>${formatCurrency(lostToExpense)}</strong></div>
-        <div style="font-size:0.97em;color:#64748b;">Lost to AUM Fee: <strong>${formatCurrency(lostToAum)}</strong></div>
-        <div style="font-size:0.97em;color:#64748b;">Total lost to fees: <strong>${formatCurrency(feesLost)}</strong></div>
+        <div style="font-size:0.97em;color:#334155;font-weight:600;margin-top:1.1em;margin-bottom:0.2em;display:flex;align-items:center;gap:0.05em;">Expenses and Fees Breakdown<span class="info-icon" id="fees-info-icon" tabindex="0" role="button" aria-label="More info"></span></div>
+        <div style="margin-left:1.2em;">
+          <div style="font-size:0.97em;color:#64748b;">
+            <div style="line-height:1.2;">
+              Lost to Exp Ratio<br>
+              <strong>${formatCurrency(lostToExpense)}</strong>
+            </div>
+            <div style="margin-top:0.7em;line-height:1.2;">
+              Lost to AUM Fee<br>
+              <strong>${formatCurrency(lostToAum)}</strong>
+            </div>
+            <div style="margin-top:0.7em;line-height:1.2;">
+              Total Lost to Fees and Expenses<br>
+              <strong>${formatCurrency(feesLost)}</strong>
+            </div>
+          </div>
+        </div>
       `;
+
+      // Add info icon styles and tooltip logic if not already present
+      if (!document.getElementById('info-icon-style')) {
+        const style = document.createElement('style');
+        style.id = 'info-icon-style';
+        style.textContent =
+          '.info-icon {' +
+          ' display: inline-block;' +
+          ' width: 1.1em;' +
+          ' height: 1.1em;' +
+          ' margin-left: 0.3em;' +
+          ' border-radius: 50%;' +
+          ' background: #e0e7ef;' +
+          ' color: #334155;' +
+          ' text-align: center;' +
+          ' font-size: 0.95em;' +
+          ' font-weight: bold;' +
+          ' line-height: 1.1em;' +
+          ' cursor: pointer;' +
+          ' border: 1.5px solid #94a3b8;' +
+          ' position: relative;' +
+          '}' +
+          ' .info-icon::after {' +
+          " content: 'i';" +
+          ' position: absolute;' +
+          ' left: 0;' +
+          ' top: 0;' +
+          ' width: 100%;' +
+          ' height: 100%;' +
+          ' display: flex;' +
+          ' align-items: center;' +
+          ' justify-content: center;' +
+          '}' +
+          ' .info-tooltip {' +
+          ' position: fixed;' +
+          ' z-index: 9999;' +
+          ' background: #f8fafc;' +
+          ' color: #334155;' +
+          ' border: 1px solid #94a3b8;' +
+          ' border-radius: 7px;' +
+          ' padding: 0.7em 1em;' +
+          ' font-size: 0.97em;' +
+          ' box-shadow: 0 2px 12px rgba(0,0,0,0.13);' +
+          ' max-width: 320px;' +
+          ' min-width: 180px;' +
+          ' pointer-events: none;' +
+          ' opacity: 0;' +
+          ' transition: opacity 0.18s;' +
+          '}' +
+          ' .info-tooltip.active {' +
+          ' opacity: 1;' +
+          ' pointer-events: auto;' +
+          '}';
+        document.head.appendChild(style);
+      }
+
+      // Remove any existing tooltips
+      document.querySelectorAll('.info-tooltip').forEach(e => e.remove());
+
+      // Add event listener for the single info icon (wait for DOM update)
+      setTimeout(() => {
+        const feesInfoIcon = document.getElementById('fees-info-icon');
+        if (feesInfoIcon) {
+          feesInfoIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            // Remove any existing modal
+            document.querySelectorAll('.fee-modal-backdrop').forEach(e => e.remove());
+            // Create modal backdrop
+            const backdrop = document.createElement('div');
+            backdrop.className = 'fee-modal-backdrop';
+            backdrop.style.position = 'fixed';
+            backdrop.style.top = '0';
+            backdrop.style.left = '0';
+            backdrop.style.width = '100vw';
+            backdrop.style.height = '100vh';
+            backdrop.style.background = 'rgba(30,41,59,0.18)';
+            backdrop.style.zIndex = '9999';
+            backdrop.style.display = 'flex';
+            backdrop.style.alignItems = 'center';
+            backdrop.style.justifyContent = 'center';
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'fee-modal';
+            modal.style.background = '#fff';
+            modal.style.borderRadius = '12px';
+            modal.style.boxShadow = '0 4px 24px 0 #0002';
+            modal.style.padding = '1.5em 1.3em 1.2em 1.3em';
+            modal.style.maxWidth = '340px';
+            modal.style.width = '92vw';
+            modal.style.color = '#1e293b';
+            modal.style.fontSize = '1.04em';
+            modal.innerHTML = `
+              <div style="font-weight:600;font-size:1.08em;margin-bottom:0.7em;">Fee & Expense Breakdown</div>
+              <div style="margin-bottom:0.7em;"><strong>Lost to Exp Ratio:</strong> The expense ratio is an annual fee, expressed as a percentage of your investment, that covers the fund's operating costs. This is deducted from your investment returns.</div>
+              <div style="margin-bottom:0.7em;"><strong>Lost to AUM Fee:</strong> The AUM (Assets Under Management) fee is a percentage-based fee charged by advisors or platforms for managing your investments. This is also deducted from your returns.</div>
+              <div><strong>Total Lost to Fees and Expenses:</strong> This is the total amount lost to both expense ratio and AUM fees over the investment period.</div>
+              <button id="close-fee-modal" style="margin-top:1.3em;padding:0.6em 1.2em;border:none;border-radius:7px;background:#18181b;color:#fff;font-size:1em;cursor:pointer;width:100%;font-weight:600;">Close</button>
+            `;
+            backdrop.appendChild(modal);
+            document.body.appendChild(backdrop);
+            // Close modal on button click or backdrop click
+            document.getElementById('close-fee-modal').onclick = () => backdrop.remove();
+            backdrop.onclick = (ev) => { if (ev.target === backdrop) backdrop.remove(); };
+          });
+          // For accessibility: show modal on Enter/Space
+          feesInfoIcon.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              feesInfoIcon.click();
+            }
+          });
+        }
+      }, 0);
       resultsDiv.style.display = 'block';
     };
   </script>

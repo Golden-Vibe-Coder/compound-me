@@ -11,7 +11,6 @@ A simple, mobile-friendly compound interest calculator for investors. This versi
   - Annual rate of return (required)
   - Number of years (required)
   - Inflation (optional)
-  - Reinvest dividends (optional, defaults to Yes)
 - Results display final balance, total contributions, and total interest earned.
 - Modern, mobile-first design.
 
