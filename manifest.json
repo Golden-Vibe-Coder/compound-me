@@ -1,0 +1,16 @@
+{
+  "name": "Finance App",
+  "short_name": "Finance App",
+  "description": "Compound interest and FIRE calculator",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#f8fafc",
+  "icons": [
+    {
+      "src": "Icons/icons8-investing-64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }
+  ]
+}
