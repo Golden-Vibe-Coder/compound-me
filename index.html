@@ -21,6 +21,12 @@
     #hamburger-menu, #menu-back {
       -webkit-tap-highlight-color: transparent;
     }
+    /* Ensure hamburger menu stays fixed and doesn't follow scroll */
+    #hamburger-menu {
+      position: fixed !important;
+      top: 2px !important;
+      left: 5px !important;
+    }
             /* Ensure icon images display in original color, not affected by parent color/filter/mask */
             img[src*="Icons/"] {
               filter: none !important;
