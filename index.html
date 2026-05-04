@@ -262,7 +262,7 @@
       <label style="margin-bottom:0.13em;">Current Nest Egg ($)
         <input type="number" id="fire-nestegg" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
       </label>
-      <label style="margin-bottom:0.13em;">Monthly Contribution ($)
+      <label style="margin-bottom:0.13em;">Annual Contribution ($)
         <input type="number" id="fire-contribution" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Expected Annual Return (%)
@@ -357,7 +357,8 @@
         e.preventDefault();
         // Get inputs
         const nestEgg = parseFloat(document.getElementById('fire-nestegg').value) || 0;
-        const monthlyContribution = parseFloat(document.getElementById('fire-contribution').value) || 0;
+        const annualContribution = parseFloat(document.getElementById('fire-contribution').value) || 0;
+        const monthlyContribution = annualContribution / 12;
         const annualReturn = parseFloat(document.getElementById('fire-return').value) || 0;
         const annualFees = parseFloat(document.getElementById('fire-fees').value) || 0;
         const inflation = parseFloat(document.getElementById('fire-inflation').value) || 0;
