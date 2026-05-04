@@ -260,10 +260,10 @@
     <div class="subtitle">Find your Financial Independence (FIRE) number and timeline.</div>
     <form id="fire-form" autocomplete="off" style="margin-top:0;display:flex;flex-direction:column;gap:0.13em;">
       <label style="margin-bottom:0.13em;">Current Nest Egg ($)
-        <input type="number" id="fire-nestegg" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
+        <input type="text" id="fire-nestegg" inputmode="decimal" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Monthly Contribution ($)
-        <input type="number" id="fire-contribution" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
+        <input type="text" id="fire-contribution" inputmode="decimal" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Expected Annual Return (%)
         <input type="number" id="fire-return" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
@@ -275,7 +275,7 @@
         <input type="number" id="fire-inflation" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Annual Retirement Spending ($)
-        <input type="number" id="fire-spending" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
+        <input type="text" id="fire-spending" inputmode="decimal" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Safe Withdrawal Rate (%)
         <select id="fire-swr" style="margin-bottom:0.13em;">
@@ -356,12 +356,12 @@
       document.getElementById('fire-form').onsubmit = function(e) {
         e.preventDefault();
         // Get inputs
-        const nestEgg = parseFloat(document.getElementById('fire-nestegg').value) || 0;
-        const monthlyContribution = parseFloat(document.getElementById('fire-contribution').value) || 0;
+        const nestEgg = parseFloat(document.getElementById('fire-nestegg').value.replace(/,/g, '')) || 0;
+        const monthlyContribution = parseFloat(document.getElementById('fire-contribution').value.replace(/,/g, '')) || 0;
         const annualReturn = parseFloat(document.getElementById('fire-return').value) || 0;
         const annualFees = parseFloat(document.getElementById('fire-fees').value) || 0;
         const inflation = parseFloat(document.getElementById('fire-inflation').value) || 0;
-        const annualSpending = parseFloat(document.getElementById('fire-spending').value) || 0;
+        const annualSpending = parseFloat(document.getElementById('fire-spending').value.replace(/,/g, '')) || 0;
         const swr = parseFloat(document.getElementById('fire-swr').value) / 100;
 
         // Calculate FIRE number (inflation-adjusted for year 0)
@@ -505,6 +505,9 @@
     document.addEventListener('DOMContentLoaded', function() {
       addCommaFormatting(document.getElementById('starting'));
       addCommaFormatting(document.getElementById('contribution'));
+      addCommaFormatting(document.getElementById('fire-nestegg'));
+      addCommaFormatting(document.getElementById('fire-contribution'));
+      addCommaFormatting(document.getElementById('fire-spending'));
     });
     function formatCurrency(n) {
       return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
