@@ -259,6 +259,12 @@
     <h1>FIRE Calculator</h1>
     <div class="subtitle">Find your Financial Independence (FIRE) number and timeline.</div>
     <form id="fire-form" autocomplete="off" style="margin-top:0;display:flex;flex-direction:column;gap:0.13em;">
+      <label style="margin-bottom:0.13em;">Current Age
+        <input type="number" id="fire-current-age" min="0" max="120" step="1" inputmode="numeric" style="margin-bottom:0.13em;" />
+      </label>
+      <label style="margin-bottom:0.13em;">Retirement Age
+        <input type="number" id="fire-retirement-age" min="0" max="120" step="1" inputmode="numeric" style="margin-bottom:0.13em;" />
+      </label>
       <label style="margin-bottom:0.13em;">Current Nest Egg ($)
         <input type="number" id="fire-nestegg" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
       </label>
@@ -356,6 +362,8 @@
       document.getElementById('fire-form').onsubmit = function(e) {
         e.preventDefault();
         // Get inputs
+        const currentAge = parseFloat(document.getElementById('fire-current-age').value) || 0;
+        const retirementAge = parseFloat(document.getElementById('fire-retirement-age').value) || 0;
         const nestEgg = parseFloat(document.getElementById('fire-nestegg').value) || 0;
         const monthlyContribution = parseFloat(document.getElementById('fire-contribution').value) || 0;
         const annualReturn = parseFloat(document.getElementById('fire-return').value) || 0;
@@ -412,6 +420,27 @@
         // Time remaining
         const years = fireReached ? Math.floor(months / 12) : '—';
         const remMonths = fireReached ? months % 12 : '—';
+        // Calculate retirement age based on time to FI
+        let retirementAgeDisplay = '';
+        if (currentAge > 0 && fireReached) {
+          const yearsToFire = months / 12;
+          const projectedRetirementAge = currentAge + yearsToFire;
+          retirementAgeDisplay = `<div style="margin-bottom:0.7em;">Projected Retirement Age: <b>${projectedRetirementAge.toFixed(1)} years old</b></div>`;
+        }
+        // Check if retirement age goal is provided
+        let ageGoalComparison = '';
+        if (currentAge > 0 && retirementAge > 0 && fireReached) {
+          const yearsToFire = months / 12;
+          const projectedRetirementAge = currentAge + yearsToFire;
+          const yearsDifference = projectedRetirementAge - retirementAge;
+          if (Math.abs(yearsDifference) < 0.1) {
+            ageGoalComparison = `<div style="margin-bottom:0.7em;color:#22c55e;">✓ You'll reach FIRE right at your target retirement age!</div>`;
+          } else if (yearsDifference < 0) {
+            ageGoalComparison = `<div style="margin-bottom:0.7em;color:#22c55e;">✓ You'll reach FIRE <b>${Math.abs(yearsDifference).toFixed(1)} years earlier</b> than your target retirement age of ${retirementAge}!</div>`;
+          } else {
+            ageGoalComparison = `<div style="margin-bottom:0.7em;color:#f59e0b;">You'll reach FIRE <b>${yearsDifference.toFixed(1)} years later</b> than your target retirement age of ${retirementAge}.</div>`;
+          }
+        }
         // Fee penalty
         let feePenalty = '';
         if (fireReached && fireReachedNoFees) {
@@ -428,6 +457,8 @@
           <div style="font-size:1.08em;margin-bottom:0.7em;"><b>FIRE Number:</b> $${fireNumber.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
           <div style="margin-bottom:0.7em;">Progress to FI: <b>${percentToFire.toFixed(1)}%</b></div>
           <div style="margin-bottom:0.7em;">Freedom Clock: <b>${years} years${remMonths !== '—' ? (', ' + remMonths + ' months') : ''}</b> to FI</div>
+          ${retirementAgeDisplay}
+          ${ageGoalComparison}
           <div style="margin-bottom:0.7em;">${feePenalty}</div>
         `;
 
