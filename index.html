@@ -592,7 +592,7 @@
       });
     }
 
-    function renderCompoundChartForCompoundMe(startingBalance, annualContribution, gross, expense, aum, years) {
+    function renderCompoundChartForCompoundMe(startingBalance, annualContribution, gross, expense, aum, inflation, years) {
       const labels = [];
       const contributions = [];
       const keepableGrowth = [];
@@ -603,9 +603,9 @@
       for (let year = 1; year <= years; year++) {
         for (let month = 1; month <= 12; month++) {
           const monthlyContribution = annualContribution / 12;
-          const intNoFees = balNoFees * (Math.pow(1 + gross, 1/12) - 1);
+          const intNoFees = balNoFees * (Math.pow(1 + (gross - inflation), 1/12) - 1);
           balNoFees += intNoFees + monthlyContribution;
-          const intWithFees = balWithFees * (Math.pow(1 + (gross - expense - aum), 1/12) - 1);
+          const intWithFees = balWithFees * (Math.pow(1 + (gross - expense - aum - inflation), 1/12) - 1);
           balWithFees += intWithFees + monthlyContribution;
           contribSum += monthlyContribution;
         }
@@ -702,7 +702,8 @@
       const gross = grossAnnualReturn / 100;
       const expense = expenseRatio / 100;
       const aum = aumFee / 100;
-      const effectiveAnnual = Math.max(gross - expense - aum - (inflation / 100), 0);
+      const inflationDecimal = inflation / 100;
+      const effectiveAnnual = Math.max(gross - expense - aum - inflationDecimal, 0);
       // Simulate no-fee scenario
       let balanceNoFees = startingBalance;
       let balanceExpenseOnly = startingBalance;
@@ -766,7 +767,7 @@
 
       // Load Chart.js and render the chart
       loadChartJs(function() {
-        renderCompoundChartForCompoundMe(startingBalance, annualContribution, gross, expense, aum, years);
+        renderCompoundChartForCompoundMe(startingBalance, annualContribution, gross, expense, aum, inflationDecimal, years);
       });
 
       // Remove any existing fee modals
