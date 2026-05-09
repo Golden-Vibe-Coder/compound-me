@@ -37,12 +37,13 @@ Find your FIRE number (the amount needed to retire) and estimate your timeline t
 
 **Features:**
 - Current nest egg
-- Monthly contribution
+- Annual contribution
 - Expected annual return
 - Total annual fees
 - Annual inflation
 - Annual retirement spending
 - Safe withdrawal rate (selectable)
+- Currency fields accept comma-formatted values (for example: 125,000.50) with input validation
 - Results: FIRE number, progress to FI, estimated years/months to FI, fee penalty
 - Interactive chart: portfolio growth vs. FIRE target over time
 

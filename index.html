@@ -204,10 +204,10 @@
     <button id="menu-back" style="padding:0;margin:5px 0 0 5px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;border-radius:12px;box-shadow:none;cursor:pointer;outline:none;">
       <img src="Icons/icons8-back-arrow-50.png" alt="Back" style="width:40px;height:40px;object-fit:contain;" />
     </button>
-    <button class="menu-link" id="menu-compound" style="text-align:left;padding:1em 1.2em 1em 1.8em;font-size:1.08em;border:none;background:none;color:#18181b;cursor:pointer;width:100%;">Compound</button>
-    <button class="menu-link" id="menu-fire" style="text-align:left;padding:1em 1.2em 1em 1.8em;font-size:1.08em;border:none;background:none;color:#18181b;cursor:pointer;width:100%;">FIRE</button>
+    <button class="menu-link" id="menu-compound" style="text-align:left;padding:1em 1.2em 1em 1.8em;font-size:1.08em;border:none;background:none;color:#18181b;cursor:pointer;width:100%;">Compound Me</button>
+    <button class="menu-link" id="menu-fire" style="text-align:left;padding:1em 1.2em 1em 1.8em;font-size:1.08em;border:none;background:none;color:#18181b;cursor:pointer;width:100%;">FIRE Calculator</button>
     <div style="flex:1 1 auto;"></div>
-    <div style="padding:0 0 1.2em 0.5em;font-size:0.85em;color:#94a3b8;text-align:left;">
+    <div style="padding:0 1em 1.2em 1em;font-size:0.85em;color:#94a3b8;text-align:left;">
       Icons by <a href="https://icons8.com/icon/8n6z6pR9QFqC/investing" target="_blank" style="color:#2563eb;text-decoration:underline;">Icons8</a>
     </div>
   </div>
@@ -260,10 +260,10 @@
     <div class="subtitle">Find your Financial Independence (FIRE) number and timeline.</div>
     <form id="fire-form" autocomplete="off" style="margin-top:0;display:flex;flex-direction:column;gap:0.13em;">
       <label style="margin-bottom:0.13em;">Current Nest Egg ($)
-        <input type="number" id="fire-nestegg" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
+        <input type="text" id="fire-nestegg" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Annual Contribution ($)
-        <input type="number" id="fire-contribution" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
+        <input type="text" id="fire-contribution" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Expected Annual Return (%)
         <input type="number" id="fire-return" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
@@ -275,7 +275,7 @@
         <input type="number" id="fire-inflation" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Annual Retirement Spending ($)
-        <input type="number" id="fire-spending" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
+        <input type="text" id="fire-spending" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Safe Withdrawal Rate (%)
         <select id="fire-swr" style="margin-bottom:0.13em;">
@@ -301,7 +301,7 @@
     function openMenu() {
       const side = document.getElementById('side-menu');
       if (!side) return;
-      side.style.width = '220px';
+      side.style.width = '250px';
       side.style.pointerEvents = 'auto';
       menuOpen = true;
     }
@@ -355,14 +355,51 @@
     function initFireCalculator() {
       document.getElementById('fire-form').onsubmit = function(e) {
         e.preventDefault();
+        document.querySelectorAll('.fire-inline-error').forEach(el => el.remove());
+        let hasError = false;
+
+        function showFireError(input, message) {
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'fire-inline-error';
+          errorDiv.innerHTML = `<img src="Icons/icons8-error-50.png" alt="Error" style="width:1.1em;vertical-align:middle;margin-right:0.3em;"> <span>${message}</span>`;
+          errorDiv.style.color = '#dc2626';
+          errorDiv.style.fontWeight = '500';
+          errorDiv.style.marginBottom = '0.2em';
+          errorDiv.style.display = 'flex';
+          errorDiv.style.alignItems = 'center';
+          errorDiv.style.gap = '0.3em';
+          errorDiv.style.fontSize = '1em';
+          input.parentNode.insertBefore(errorDiv, input);
+        }
+
         // Get inputs
-        const nestEgg = parseFloat(document.getElementById('fire-nestegg').value) || 0;
-        const annualContribution = parseFloat(document.getElementById('fire-contribution').value) || 0;
-        const monthlyContribution = annualContribution / 12;
+        const nestEggInput = document.getElementById('fire-nestegg');
+        const contributionInput = document.getElementById('fire-contribution');
+        const spendingInput = document.getElementById('fire-spending');
+        const nestEggParsed = parseCurrencyInput(nestEggInput.value);
+        const annualContributionParsed = parseCurrencyInput(contributionInput.value);
+        const spendingParsed = parseCurrencyInput(spendingInput.value);
+
+        if (nestEggParsed.invalid) {
+          showFireError(nestEggInput, 'Enter a valid dollar amount');
+          hasError = true;
+        }
+        if (annualContributionParsed.invalid) {
+          showFireError(contributionInput, 'Enter a valid dollar amount');
+          hasError = true;
+        }
+        if (spendingParsed.invalid) {
+          showFireError(spendingInput, 'Enter a valid dollar amount');
+          hasError = true;
+        }
+        if (hasError) return;
+
+        const nestEgg = nestEggParsed.value;
+        const monthlyContribution = annualContributionParsed.value / 12;
         const annualReturn = parseFloat(document.getElementById('fire-return').value) || 0;
         const annualFees = parseFloat(document.getElementById('fire-fees').value) || 0;
         const inflation = parseFloat(document.getElementById('fire-inflation').value) || 0;
-        const annualSpending = parseFloat(document.getElementById('fire-spending').value) || 0;
+        const annualSpending = spendingParsed.value;
         const swr = parseFloat(document.getElementById('fire-swr').value) / 100;
 
         // Calculate FIRE number (inflation-adjusted for year 0)
@@ -506,7 +543,16 @@
     document.addEventListener('DOMContentLoaded', function() {
       addCommaFormatting(document.getElementById('starting'));
       addCommaFormatting(document.getElementById('contribution'));
+      addCommaFormatting(document.getElementById('fire-nestegg'));
+      addCommaFormatting(document.getElementById('fire-contribution'));
+      addCommaFormatting(document.getElementById('fire-spending'));
     });
+    function parseCurrencyInput(value) {
+      const cleaned = value.replace(/,/g, '').trim();
+      if (cleaned === '') return { value: 0, invalid: false };
+      if (!/^(\d+\.?\d*|\.\d+)$/.test(cleaned)) return { value: 0, invalid: true };
+      return { value: parseFloat(cleaned), invalid: false };
+    }
     function formatCurrency(n) {
       return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
     }
@@ -593,7 +639,7 @@
       });
     }
 
-    function renderCompoundChartForCompoundMe(startingBalance, annualContribution, gross, expense, aum, years) {
+    function renderCompoundChartForCompoundMe(startingBalance, annualContribution, gross, expense, aum, inflation, years) {
       const labels = [];
       const contributions = [];
       const keepableGrowth = [];
@@ -604,9 +650,9 @@
       for (let year = 1; year <= years; year++) {
         for (let month = 1; month <= 12; month++) {
           const monthlyContribution = annualContribution / 12;
-          const intNoFees = balNoFees * (Math.pow(1 + gross, 1/12) - 1);
+          const intNoFees = balNoFees * (Math.pow(1 + (gross - inflation), 1/12) - 1);
           balNoFees += intNoFees + monthlyContribution;
-          const intWithFees = balWithFees * (Math.pow(1 + (gross - expense - aum), 1/12) - 1);
+          const intWithFees = balWithFees * (Math.pow(1 + (gross - expense - aum - inflation), 1/12) - 1);
           balWithFees += intWithFees + monthlyContribution;
           contribSum += monthlyContribution;
         }
@@ -703,7 +749,8 @@
       const gross = grossAnnualReturn / 100;
       const expense = expenseRatio / 100;
       const aum = aumFee / 100;
-      const effectiveAnnual = Math.max(gross - expense - aum - (inflation / 100), 0);
+      const inflationDecimal = inflation / 100;
+      const effectiveAnnual = Math.max(gross - expense - aum - inflationDecimal, 0);
       // Simulate no-fee scenario
       let balanceNoFees = startingBalance;
       let balanceExpenseOnly = startingBalance;
@@ -767,7 +814,7 @@
 
       // Load Chart.js and render the chart
       loadChartJs(function() {
-        renderCompoundChartForCompoundMe(startingBalance, annualContribution, gross, expense, aum, years);
+        renderCompoundChartForCompoundMe(startingBalance, annualContribution, gross, expense, aum, inflationDecimal, years);
       });
 
       // Remove any existing fee modals
