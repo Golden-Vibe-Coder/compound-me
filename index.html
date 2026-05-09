@@ -260,10 +260,10 @@
     <div class="subtitle">Find your Financial Independence (FIRE) number and timeline.</div>
     <form id="fire-form" autocomplete="off" style="margin-top:0;display:flex;flex-direction:column;gap:0.13em;">
       <label style="margin-bottom:0.13em;">Current Nest Egg ($)
-        <input type="number" id="fire-nestegg" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
+        <input type="text" id="fire-nestegg" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Monthly Contribution ($)
-        <input type="number" id="fire-contribution" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
+        <input type="text" id="fire-contribution" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Expected Annual Return (%)
         <input type="number" id="fire-return" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
@@ -275,7 +275,7 @@
         <input type="number" id="fire-inflation" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Annual Retirement Spending ($)
-        <input type="number" id="fire-spending" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
+        <input type="text" id="fire-spending" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Safe Withdrawal Rate (%)
         <select id="fire-swr" style="margin-bottom:0.13em;">
@@ -355,13 +355,51 @@
     function initFireCalculator() {
       document.getElementById('fire-form').onsubmit = function(e) {
         e.preventDefault();
+        document.querySelectorAll('.fire-inline-error').forEach(el => el.remove());
+        let hasError = false;
+
+        function showFireError(input, message) {
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'fire-inline-error';
+          errorDiv.innerHTML = `<img src="Icons/icons8-error-50.png" alt="Error" style="width:1.1em;vertical-align:middle;margin-right:0.3em;"> <span>${message}</span>`;
+          errorDiv.style.color = '#dc2626';
+          errorDiv.style.fontWeight = '500';
+          errorDiv.style.marginBottom = '0.2em';
+          errorDiv.style.display = 'flex';
+          errorDiv.style.alignItems = 'center';
+          errorDiv.style.gap = '0.3em';
+          errorDiv.style.fontSize = '1em';
+          input.parentNode.insertBefore(errorDiv, input);
+        }
+
         // Get inputs
-        const nestEgg = parseFloat(document.getElementById('fire-nestegg').value) || 0;
-        const monthlyContribution = parseFloat(document.getElementById('fire-contribution').value) || 0;
+        const nestEggInput = document.getElementById('fire-nestegg');
+        const contributionInput = document.getElementById('fire-contribution');
+        const spendingInput = document.getElementById('fire-spending');
+        const nestEggParsed = parseCurrencyInput(nestEggInput.value);
+        const contributionParsed = parseCurrencyInput(contributionInput.value);
+        const spendingParsed = parseCurrencyInput(spendingInput.value);
+
+        if (nestEggParsed.invalid) {
+          showFireError(nestEggInput, 'Enter a valid dollar amount');
+          hasError = true;
+        }
+        if (contributionParsed.invalid) {
+          showFireError(contributionInput, 'Enter a valid dollar amount');
+          hasError = true;
+        }
+        if (spendingParsed.invalid) {
+          showFireError(spendingInput, 'Enter a valid dollar amount');
+          hasError = true;
+        }
+        if (hasError) return;
+
+        const nestEgg = nestEggParsed.value;
+        const monthlyContribution = contributionParsed.value;
         const annualReturn = parseFloat(document.getElementById('fire-return').value) || 0;
         const annualFees = parseFloat(document.getElementById('fire-fees').value) || 0;
         const inflation = parseFloat(document.getElementById('fire-inflation').value) || 0;
-        const annualSpending = parseFloat(document.getElementById('fire-spending').value) || 0;
+        const annualSpending = spendingParsed.value;
         const swr = parseFloat(document.getElementById('fire-swr').value) / 100;
 
         // Calculate FIRE number (inflation-adjusted for year 0)
@@ -505,7 +543,16 @@
     document.addEventListener('DOMContentLoaded', function() {
       addCommaFormatting(document.getElementById('starting'));
       addCommaFormatting(document.getElementById('contribution'));
+      addCommaFormatting(document.getElementById('fire-nestegg'));
+      addCommaFormatting(document.getElementById('fire-contribution'));
+      addCommaFormatting(document.getElementById('fire-spending'));
     });
+    function parseCurrencyInput(value) {
+      const cleaned = value.replace(/,/g, '').trim();
+      if (cleaned === '') return { value: 0, invalid: false };
+      if (!/^(\d+\.?\d*|\.\d+)$/.test(cleaned)) return { value: 0, invalid: true };
+      return { value: parseFloat(cleaned), invalid: false };
+    }
     function formatCurrency(n) {
       return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
     }

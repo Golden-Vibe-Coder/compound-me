@@ -43,6 +43,7 @@ Find your FIRE number (the amount needed to retire) and estimate your timeline t
 - Annual inflation
 - Annual retirement spending
 - Safe withdrawal rate (selectable)
+- Currency fields accept comma-formatted values (for example: 125,000.50) with input validation
 - Results: FIRE number, progress to FI, estimated years/months to FI, fee penalty
 - Interactive chart: portfolio growth vs. FIRE target over time
 
