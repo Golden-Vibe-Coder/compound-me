@@ -1,6 +1,6 @@
 # Finance App
 
-A simple, mobile-friendly web app for investors. Instantly calculates compound interest and your FIRE (Financial Independence, Retire Early) number. No frameworks or build tools required—just open in your browser.
+A simple web app for investors with mobile-first and desktop-optimized layouts. Instantly calculates compound interest and your FIRE (Financial Independence, Retire Early) number. No frameworks or build tools required-just open in your browser.
 
 ---
 
@@ -69,9 +69,11 @@ Calculate how your investments grow over time with compound interest.
 **How to Use:**
 
 1. Open `index.html` in your browser.
-2. Use the hamburger menu (top left) to select "Compound Me" if not already selected.
+2. Use the header tabs to select "Compound Me" if not already selected.
 3. Enter your investment details and click **Calculate**.
 4. View your results instantly below the form.
+
+On desktop screens, the calculator and results render side-by-side so you can compare inputs, summary values, and charts without excessive scrolling.
 
 ---
 
@@ -95,17 +97,79 @@ Find your FIRE number (the amount needed to retire) and estimate your timeline t
 **How to Use:**
 
 1. Open `index.html` in your browser.
-2. Use the hamburger menu (top left) to select "FIRE Calculator".
+2. Use the header tabs to select "FIRE Calculator".
 3. Enter your financial details and click **Calculate**.
 4. View your FIRE number, timeline, and fee impact instantly below the form.
+
+On desktop screens, the FIRE inputs stay visible while results and charts render in a second column for easier planning workflows.
+
+---
+
+### 3. Monte Carlo Retirement Simulator
+
+**Purpose:**
+Determine if your money will last through your retirement drawdown phase by running randomized market simulations.
+
+**Features:**
+
+- Starting portfolio
+- Annual withdrawal
+- Years in retirement
+- Expected nominal annual return
+- Annual inflation rate
+- Volatility (Standard Deviation)
+- Results: Probability of Success (percentage of simulated portfolios that do not run out of money)
+- Interactive chart: 10th (pessimistic), 50th (median), and 90th (optimistic) percentile portfolio balances over time
+
+**How to Use:**
+
+1. Open `index.html` in your browser.
+2. Open the navigation menu and select "Monte Carlo".
+3. Enter your retirement scenario and click **Calculate**.
+4. View your Probability of Success and percentile paths chart.
+
+---
+
+## Calculations & Methodology
+
+This app adheres to strict financial math formulas widely used in financial planning, ensuring accuracy in long-term projections.
+
+### Inflation Adjustments (Real vs. Nominal)
+
+Rather than simply subtracting inflation from the nominal return, both the **Compound** and **FIRE** calculators use the true **Fisher Equation** to calculate the Exact Real Net Return:
+`Real Return = (1 + Nominal Gross Return - Fees) / (1 + Inflation Rate) - 1`
+This ensures the final balances and targets are accurately portrayed in "Today's Dollars".
+
+### Compounding Frequency
+
+When simulating monthly contributions, the calculators convert the annual real net return into a strict Monthly Yield using geometric derivation:
+`Monthly Rate = (1 + Annual Real Return)^(1/12) - 1`
+They avoid the naive (and inaccurate) approach of dividing the annual rate by 12.
+
+### FIRE Number Details
+
+The FIRE simulation uses the Safe Withdrawal Rate (SWR) approach (popularized by the Trinity Study).
+
+- **Target Line**: `Annual Spending / Safe Withdrawal Rate` (e.g. 4% = 25x expenses).
+- **Horizon**: The simulator compounds up to 60 years (720 months) sequentially to find the exact crossover point where portfolio balance exceeds the static FIRE target.
+- **Fee Penalty**: The timeline explicitly runs the entire simulation twice—with and without the provided fees—to isolate and report exactly how many years you are forced to work simply to pay those fees.
+
+### Monte Carlo Drawdown Simulation
+
+The Monte Carlo tool runs 1,000 independent randomized simulations of a retirement drawdown period.
+
+- **Random Variable Generation**: It uses the **Box-Muller transform** to generate normally distributed annual returns based on the user's Expected Nominal Return and Volatility (Standard Deviation).
+- **Inflation Adjustment**: Withdrawals are drawn from the portfolio at the start of each year, and the withdrawal amount is stepped up annually by the given Inflation Rate to maintain purchasing power.
+- **Results**: "Probability of Success" represents the percentage of those 1,000 simulations where the final balance remains above $0.
 
 ---
 
 ## Navigation & UI
 
-- Use the hamburger menu (top left) to switch between calculators.
-- Side menu includes a back arrow and page links.
-- Mobile-first, responsive design with large tap targets and consistent icon sizing.
+- A sticky header keeps the app title and calculator switcher visible on both mobile and desktop.
+- Header tabs provide one-tap switching between Compound and FIRE calculators.
+- The same tab navigation pattern is used on mobile and desktop for consistency.
+- Responsive design keeps large tap targets and improved readability across screen sizes.
 
 ---
 

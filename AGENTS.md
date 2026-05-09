@@ -14,13 +14,14 @@ These instructions apply to any coding agent working in this repository.
 - Keep form labels and keyboard accessibility intact.
 - Keep input font-size at 16px or larger to avoid iOS zoom-on-focus.
 - Preserve hamburger menu open/close behavior and calculator page switching.
+- Auto-format all new form inputs by adding them to the DOMContentLoaded handlers for `addCommaFormatting` (for currencies) or `addNumberPasteSanitization` (for percentages/years) so mobile paste and numeric display matches the other calculators.
 
 ## Calculator logic
 
 - Keep calculations deterministic and easy to follow.
 - Use percent values as user-facing input/output (`7` means 7%), but decimal values internally.
 - Validate numeric inputs and guard against `NaN`, blanks, or invalid negative values.
-- Do not change core assumptions (monthly compounding, inflation handling, fee handling) without documenting the reason.
+- **Do not change core math formulas** (Fisher Equation for inflation, geometric monthly yield, FIRE SWR targets) without extremely strong justification. (See README.md > Calculations & Methodology for the exact standards used).
 - Prefer small helper functions for math, then render from computed outputs.
 
 ## Performance and dependencies

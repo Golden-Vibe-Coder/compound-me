@@ -14,7 +14,8 @@ Apply these rules for all code changes in this repository.
 - Keep all interactive controls accessible by keyboard.
 - Do not remove labels for form fields.
 - Keep input font-size at 16px or larger to avoid iOS zoom-on-focus.
-- Preserve hamburger menu behavior and page switching between Compound and FIRE tools.
+- Preserve hamburger menu behavior and page switching between tools.
+- Auto-format all new form inputs by adding them to the DOMContentLoaded handlers for `addCommaFormatting` (for currencies) or `addNumberPasteSanitization` (for percentages/years) so mobile paste and numeric display matches the other calculators.
 
 ## Calculator logic rules
 
@@ -23,7 +24,7 @@ Apply these rules for all code changes in this repository.
   - User-facing input/output in percent form (for example `7` means 7%).
   - Internal calculations in decimal form.
 - Guard against invalid numeric inputs (`NaN`, empty strings, negative values where disallowed).
-- Do not silently change core assumptions (monthly compounding, inflation handling, fee treatment) without clearly documenting why.
+- **Do not change core math formulas** (Fisher Equation for inflation, geometric monthly yield, FIRE SWR targets) without extremely strong justification. (See README.md > Calculations & Methodology for the exact standards used).
 - Prefer small pure helper functions for calculations, then render from results.
 
 ## Performance and dependency rules
