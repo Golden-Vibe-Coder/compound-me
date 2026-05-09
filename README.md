@@ -37,7 +37,7 @@ Find your FIRE number (the amount needed to retire) and estimate your timeline t
 
 **Features:**
 - Current nest egg
-- Monthly contribution
+- Annual contribution
 - Expected annual return
 - Total annual fees
 - Annual inflation

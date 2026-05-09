@@ -262,7 +262,7 @@
       <label style="margin-bottom:0.13em;">Current Nest Egg ($)
         <input type="text" id="fire-nestegg" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
       </label>
-      <label style="margin-bottom:0.13em;">Monthly Contribution ($)
+      <label style="margin-bottom:0.13em;">Annual Contribution ($)
         <input type="text" id="fire-contribution" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
       </label>
       <label style="margin-bottom:0.13em;">Expected Annual Return (%)
@@ -377,14 +377,14 @@
         const contributionInput = document.getElementById('fire-contribution');
         const spendingInput = document.getElementById('fire-spending');
         const nestEggParsed = parseCurrencyInput(nestEggInput.value);
-        const contributionParsed = parseCurrencyInput(contributionInput.value);
+        const annualContributionParsed = parseCurrencyInput(contributionInput.value);
         const spendingParsed = parseCurrencyInput(spendingInput.value);
 
         if (nestEggParsed.invalid) {
           showFireError(nestEggInput, 'Enter a valid dollar amount');
           hasError = true;
         }
-        if (contributionParsed.invalid) {
+        if (annualContributionParsed.invalid) {
           showFireError(contributionInput, 'Enter a valid dollar amount');
           hasError = true;
         }
@@ -395,7 +395,7 @@
         if (hasError) return;
 
         const nestEgg = nestEggParsed.value;
-        const monthlyContribution = contributionParsed.value;
+        const monthlyContribution = annualContributionParsed.value / 12;
         const annualReturn = parseFloat(document.getElementById('fire-return').value) || 0;
         const annualFees = parseFloat(document.getElementById('fire-fees').value) || 0;
         const inflation = parseFloat(document.getElementById('fire-inflation').value) || 0;
