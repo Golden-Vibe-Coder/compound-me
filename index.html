@@ -1,91 +1,297 @@
-
-  <!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Compound interest and FIRE calculator — grow your investments and plan your financial independence.">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Finance App">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="icon" type="image/png" href="Icons/icons8-investing-64.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="Icons/icons8-investing-64.png">
-  <link rel="manifest" href="manifest.json">
-  <title>Finance App — Compound &amp; FIRE Calculator</title>
-  <style>
-    /* Remove focus outlines and tap highlights for nav icons */
-    #hamburger-menu:focus, #menu-back:focus, #hamburger-menu:focus-visible, #menu-back:focus-visible {
-      outline: none !important;
-      box-shadow: none !important;
-    }
-    #hamburger-menu, #menu-back {
-      -webkit-tap-highlight-color: transparent;
-    }
-            /* Ensure icon images display in original color, not affected by parent color/filter/mask */
-            img[src*="Icons/"] {
-              filter: none !important;
-              -webkit-filter: none !important;
-              mask: none !important;
-              -webkit-mask: none !important;
-              background: none !important;
-              color: inherit !important;
-              box-shadow: none !important;
-            }
-        html, body {
-          height: 100%;
-        }
-    body {
-      background: #f8fafc;
-      font-family: system-ui, sans-serif;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .container {
-      background: #fff;
-      border-radius: 0;
-      box-shadow: 0 2px 12px 0 #0001;
-      max-width: 400px;
-      width: 95vw;
-      margin: 0 auto 0 auto;
-      padding: 0 0.7rem 1.1rem 0.7rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-    .row {
-      display: flex;
-      gap: 0.7em;
-      align-items: flex-end;
-    }
-    .row > div {
-      flex: 1;
-      min-width: 0;
-    }
-    .small-input {
-      max-width: 90px;
-      display: inline-block;
-    }
-    h1 {
-      text-align: center;
-      margin-top: 0.1em;
-      margin-bottom: 0;
-    }
-    .subtitle {
-      text-align: center;
-      color: #475569;
-      margin-top: 0;
-      margin-bottom: 0.2em;
-      font-size: 1.05em;
-    }
-    label {
-      font-weight: 500;
-      margin-bottom: 0.2em;
-      display: block;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Compound interest and FIRE calculator — grow your investments and plan your financial independence."
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Finance App" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/png" href="Icons/icons8-investing-64.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="Icons/icons8-investing-64.png" />
+    <link rel="manifest" href="manifest.json" />
+    <title>Finance App — Compound &amp; FIRE Calculator</title>
+    <style>
+      /* Remove tap highlights for nav icons */
+      #hamburger-menu,
+      #menu-back {
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* Ensure icon images display in original color, not affected by parent color/filter/mask */
+      img[src*='Icons/'] {
+        filter: none !important;
+        -webkit-filter: none !important;
+        mask: none !important;
+        -webkit-mask: none !important;
+        background: none !important;
+        color: inherit !important;
+        box-shadow: none !important;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      :root {
+        --safe-top-inset: env(safe-area-inset-top, 0px);
+      }
+      body {
+        background: #f8fafc;
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .page-root {
+        width: 100%;
+      }
+      .app-header {
+        position: sticky;
+        top: 0;
+        z-index: 10020;
+        border-bottom: 1px solid #e2e8f0;
+        background: #ffffff;
+        backdrop-filter: blur(6px);
+      }
+      .app-header-inner {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 0.65rem 0.8rem;
+      }
+      .app-header-top {
+        display: flex;
+        align-items: center;
+        gap: 0.72rem;
+      }
+      .menu-toggle-button {
+        width: 42px;
+        height: 42px;
+        margin: 0;
+        padding: 0;
+        border-radius: 8px;
+        border: 1px solid #d6dde8;
+        background: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex: 0 0 auto;
+      }
+      .menu-toggle-button:hover {
+        background: #f1f5f9;
+      }
+      .menu-toggle-button:focus-visible,
+      .menu-link:focus-visible {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+      }
+      .menu-toggle-button img {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+      }
+      .brand-icon {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+        flex: 0 0 auto;
+      }
+      .app-brand {
+        min-width: 0;
+      }
+      .app-brand-title {
+        font-size: 1.28rem;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.1;
+      }
+      .app-brand-subtitle {
+        font-size: 0.85rem;
+        color: #475569;
+        margin-top: 0.2rem;
+      }
+      .menu-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 10025;
+        background: rgba(15, 23, 42, 0.3);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+      .menu-backdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #side-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: min(90vw, 390px);
+        height: 100vh;
+        background: #fff;
+        box-shadow: 20px 0 36px rgba(2, 8, 23, 0.22);
+        z-index: 10030;
+        transform: translateX(-104%);
+        transition: transform 0.24s cubic-bezier(0.4, 1.2, 0.5, 1);
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #dde4ee;
+      }
+      #side-menu.open {
+        transform: translateX(0);
+      }
+      .menu-drawer-top {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: calc(var(--safe-top-inset) + 0.6rem) 0.8rem 0.7rem;
+        border-bottom: 1px solid #e4ebf3;
+      }
+      .menu-close-button {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid #d6dde8;
+        background: #fff;
+        color: #0f172a;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 0;
+        padding: 0;
+        transition:
+          background 0.15s ease,
+          border-color 0.15s ease,
+          opacity 0.15s ease;
+      }
+      .menu-close-button:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        color: #0f172a;
+        opacity: 0.85;
+      }
+      .menu-close-button:active {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+        transform: none;
+      }
+      .menu-drawer-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        min-width: 0;
+      }
+      .menu-drawer-brand-text {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0f172a;
+      }
+      .menu-section-label {
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: #475569;
+        text-transform: uppercase;
+        padding: 1rem 1rem 0.45rem;
+      }
+      .menu-link {
+        width: 100%;
+        text-align: left;
+        padding: 0.95rem 1rem;
+        margin: 0;
+        border-radius: 0;
+        border: none;
+        border-top: 1px solid #e4ebf3;
+        border-bottom: 1px solid #e4ebf3;
+        background: #fff;
+        color: #0f172a;
+        font-size: 1.2rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        line-height: 1.15;
+      }
+      .menu-link + .menu-link {
+        border-top: none;
+      }
+      .menu-link::after {
+        content: '›';
+        color: #64748b;
+        font-size: 1.25rem;
+        font-weight: 500;
+      }
+      .menu-link:hover {
+        background: #f8fafc;
+      }
+      .menu-link:active {
+        transform: none;
+      }
+      .menu-link.is-active {
+        background: #eef5ff;
+        color: #0b3a75;
+      }
+      .menu-footer {
+        margin-top: auto;
+        padding: 0.9rem 1rem 1.1rem;
+        font-size: 0.83rem;
+        color: #64748b;
+        border-top: 1px solid #e4ebf3;
+      }
+      .container {
+        background: #fff;
+        border-radius: 0;
+        box-shadow: 0 2px 12px 0 #0001;
+        max-width: 400px;
+        width: 95vw;
+        margin: 0 auto 0 auto;
+        padding: 0 0.7rem 1.1rem 0.7rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      .row {
+        display: flex;
+        gap: 0.7em;
+        align-items: flex-end;
+      }
+      .row > div {
+        flex: 1;
+        min-width: 0;
+      }
+      .small-input {
+        max-width: 90px;
+        display: inline-block;
+      }
+      #expense.small-input,
+      #aum.small-input {
+        max-width: 120px;
+      }
+      h1 {
+        text-align: center;
+        margin-top: 0.1em;
+        margin-bottom: 0;
+      }
+      .subtitle {
+        text-align: center;
+        color: #475569;
+        margin-top: 0;
+        margin-bottom: 0.2em;
+        font-size: 1.05em;
+      }
+      label {
+        font-weight: 500;
+        margin-bottom: 0.2em;
+        display: block;
+      }
       .inline-error {
         color: #dc2626;
         font-weight: 500;
@@ -100,725 +306,1425 @@
         border: 2px solid #dc2626 !important;
         box-shadow: none !important;
       }
-    input, select {
-      width: 100%;
-      padding: 0.7em;
-      margin-top: 0.2em;
-      margin-bottom: 0.7em;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 1em;
-      background: #f9fafb;
-      box-sizing: border-box;
-      transition: border 0.15s;
-    }
-    form#calc-form input.input-error,
-    form#calc-form input.input-error:focus,
-    form#calc-form input.input-error:active {
-      border-width: 2px !important;
-      border-style: solid !important;
-      border-color: #dc2626 !important;
-      color: #dc2626 !important;
-      box-shadow: none !important;
-      outline: none !important;
-      background: #fff !important;
-      z-index: 2;
-      caret-color: #dc2626 !important;
-    }
-    button {
-      width: 100%;
-      padding: 0.9em;
-      background: #18181b;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.1em;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 0.5em;
-      transition: background 0.2s;
-    }
-    button:hover {
-      background: #27272a;
-    }
-    button:active {
-      background: #3f3f46;
-      transform: scale(0.99);
-    }
-    input:focus, select:focus {
-      outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
-    }
-    .results {
-      margin-top: 1.1em;
-      background: #f1f5f9;
-      border-radius: 12px;
-      padding: 1.1em;
-      color: #18181b;
-      font-size: 1.05em;
-    }
-    .results strong {
-      display: block;
-      margin-bottom: 0.3em;
-    }
-    @media (max-width: 500px) {
-      .container {
-        margin-top: 0;
-        padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+      input,
+      select {
+        width: 100%;
+        padding: 0.7em;
+        margin-top: 0.2em;
+        margin-bottom: 0.7em;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 1em;
+        background: #f9fafb;
+        box-sizing: border-box;
+        transition: border 0.15s;
       }
-    }
-    .info-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 1.15em;
-      height: 1.15em;
-      margin-left: 0.3em;
-      border-radius: 50%;
-      background: #e0e7ef;
-      color: #334155;
-      font-size: 0.82em;
-      font-weight: bold;
-      cursor: pointer;
-      border: 1.5px solid #94a3b8;
-      vertical-align: middle;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .info-icon::after { content: 'i'; }
-    .chart-container {
-      position: relative;
-      height: 40vh;
-      width: 100%;
-      max-width: 390px;
-      margin-top: 2.2em;
-      margin-bottom: 0.5em;
-    }
-  </style>
-</head>
+      form#calc-form input.input-error,
+      form#calc-form input.input-error:focus,
+      form#calc-form input.input-error:active {
+        border-width: 2px !important;
+        border-style: solid !important;
+        border-color: #dc2626 !important;
+        color: #dc2626 !important;
+        box-shadow: none !important;
+        outline: none !important;
+        background: #fff !important;
+        z-index: 2;
+        caret-color: #dc2626 !important;
+      }
+      button {
+        width: 100%;
+        padding: 0.9em;
+        background: #18181b;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 0.5em;
+        transition: background 0.2s;
+      }
+      button:hover {
+        background: #27272a;
+      }
+      button:active {
+        background: #3f3f46;
+        transform: scale(0.99);
+      }
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      }
+      .results {
+        margin-top: 1.1em;
+        background: #f1f5f9;
+        border-radius: 12px;
+        padding: 1.1em;
+        color: #18181b;
+        font-size: 1.05em;
+      }
+      .results strong {
+        display: block;
+        margin-bottom: 0.3em;
+      }
+      @media (max-width: 500px) {
+        .container {
+          margin-top: 0;
+          padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+        }
+      }
+      .info-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.15em;
+        height: 1.15em;
+        margin-left: 0.3em;
+        border-radius: 50%;
+        background: #e0e7ef;
+        color: #334155;
+        font-size: 0.82em;
+        font-weight: bold;
+        cursor: pointer;
+        border: 1.5px solid #94a3b8;
+        vertical-align: middle;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .info-icon::after {
+        content: 'i';
+      }
+      .chart-container {
+        position: relative;
+        height: 40vh;
+        width: 100%;
+        max-width: 390px;
+        margin-top: 2.2em;
+        margin-bottom: 0.5em;
+      }
+      @media (min-width: 820px) {
+        body {
+          align-items: stretch;
+        }
+        .page-root {
+          width: 100%;
+          min-height: 100vh;
+          padding-left: 0;
+          box-sizing: border-box;
+        }
+        .app-header-inner {
+          padding: 0.75rem 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 1.4rem;
+        }
+        .app-header-top {
+          gap: 0.75rem;
+        }
+        .app-brand-title {
+          font-size: 1.3rem;
+        }
+        .app-brand-subtitle {
+          font-size: 0.86rem;
+        }
+        .container {
+          border-radius: 16px;
+          max-width: 1140px;
+          width: calc(100% - 3rem);
+          margin: 1rem auto 1.6rem;
+          padding: 1.5rem;
+        }
+        #compound-page {
+          display: grid;
+          grid-template-columns: minmax(320px, 460px) minmax(360px, 1fr);
+          column-gap: 1.6rem;
+          align-items: start;
+        }
+        #compound-page h1,
+        #compound-page .subtitle {
+          grid-column: 1 / -1;
+        }
+        #compound-page #calc-form {
+          grid-column: 1;
+          position: sticky;
+          top: 6.2rem;
+        }
+        #compound-page #results {
+          grid-column: 2;
+          margin-top: 0.4rem;
+          min-height: 420px;
+          display: block !important;
+          background: transparent;
+          border: 1px dashed #d4dee9;
+        }
+        #compound-page #results:empty::before {
+          content: 'Results';
+          display: block;
+          color: #64748b;
+          font-size: 0.95em;
+          font-weight: 600;
+          letter-spacing: 0.01em;
+        }
+        #compound-page #results:not(:empty) {
+          border: none;
+          background: #f1f5f9;
+        }
+        #compound-page .chart-container {
+          max-width: 100%;
+          height: 420px;
+        }
+        #fire-page,
+        #monte-carlo-page {
+          display: grid;
+          grid-template-columns: minmax(320px, 460px) minmax(360px, 1fr);
+          column-gap: 1.6rem;
+          align-items: start;
+        }
+        #fire-page h1,
+        #fire-page .subtitle,
+        #monte-carlo-page h1,
+        #monte-carlo-page .subtitle {
+          grid-column: 1 / -1;
+        }
+        #fire-page #fire-form,
+        #monte-carlo-page #monte-carlo-form {
+          grid-column: 1;
+          position: sticky;
+          top: 6.2rem;
+        }
+        #fire-page #fire-results,
+        #fire-page #fire-visuals,
+        #monte-carlo-page #mc-results,
+        #monte-carlo-page #mc-visuals {
+          grid-column: 2;
+          margin-top: 0.4rem;
+        }
+        #fire-page #fire-results,
+        #monte-carlo-page #mc-results {
+          display: block !important;
+          min-height: 120px;
+          background: transparent;
+          border: 1px dashed #d4dee9;
+        }
+        #fire-page #fire-results:empty::before,
+        #monte-carlo-page #mc-results:empty::before {
+          content: 'Results';
+          display: block;
+          color: #64748b;
+          font-size: 0.95em;
+          font-weight: 600;
+          letter-spacing: 0.01em;
+        }
+        #fire-page #fire-results:not(:empty),
+        #monte-carlo-page #mc-results:not(:empty) {
+          border: none;
+          background: #f1f5f9;
+        }
+        #fire-page #fire-visuals .chart-container,
+        #monte-carlo-page #mc-visuals .chart-container {
+          max-width: 100% !important;
+          height: 420px;
+        }
+      }
+    </style>
+  </head>
   <body>
-  <div id="hamburger-menu" style="position:fixed;top:2px;left:5px;cursor:pointer;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:transparent;border-radius:12px;box-shadow:none;outline:none;z-index:10001;">
-    <img id="hamburger-icon" src="Icons/icons8-hamburger-menu-50.png" alt="Menu" style="width:40px;height:40px;object-fit:contain;" />
-  </div>
-  <div id="side-menu" style="position:fixed;top:0;left:0;width:0;max-width:260px;height:100vh;background:#fff;box-shadow:2px 0 16px #000;z-index:10010;overflow:hidden;transition:width 0.22s cubic-bezier(.4,1.3,.6,1);display:flex;flex-direction:column;pointer-events:none;">
-    <button id="menu-back" style="padding:0;margin:5px 0 0 5px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;border-radius:12px;box-shadow:none;cursor:pointer;outline:none;">
-      <img src="Icons/icons8-back-arrow-50.png" alt="Back" style="width:40px;height:40px;object-fit:contain;" />
-    </button>
-    <button class="menu-link" id="menu-compound" style="text-align:left;padding:1em 1.2em 1em 1.8em;font-size:1.08em;border:none;background:none;color:#18181b;cursor:pointer;width:100%;">Compound Me</button>
-    <button class="menu-link" id="menu-fire" style="text-align:left;padding:1em 1.2em 1em 1.8em;font-size:1.08em;border:none;background:none;color:#18181b;cursor:pointer;width:100%;">FIRE Calculator</button>
-    <div style="flex:1 1 auto;"></div>
-    <div style="padding:0 1em 1.2em 1em;font-size:0.85em;color:#94a3b8;text-align:left;">
-      Icons by <a href="https://icons8.com/icon/8n6z6pR9QFqC/investing" target="_blank" style="color:#2563eb;text-decoration:underline;">Icons8</a>
-    </div>
-  </div>
-  <div id="compound-page" class="container" style="position:relative;">
-    <h1>Compound Me</h1>
-    <div class="subtitle">Calculate how much your investments can grow over time.</div>
-    <form id="calc-form" autocomplete="off">
-
-      <label for="starting">Starting Investment ($)<span style="color:#ef4444">*</span></label>
-      <input type="text" id="starting" inputmode="decimal" pattern="[0-9,\.]*" autocomplete="off" aria-required="true">
-
-      <label for="contribution">Annual Contribution ($)</label>
-      <input type="text" id="contribution" inputmode="decimal" pattern="[0-9,\.]*">
-
-      <div class="row">
-        <div style="flex:1;">
-          <label for="return">Annual Return (%)<span style="color:#ef4444">*</span></label>
-          <input type="number" id="return" min="0" step="any" class="small-input" autocomplete="off" aria-required="true" inputmode="decimal">
+    <div class="page-root">
+      <div class="app-header">
+        <div class="app-header-inner">
+          <div class="app-header-top">
+            <button
+              id="hamburger-menu"
+              class="menu-toggle-button"
+              aria-label="Open navigation menu"
+            >
+              <img id="hamburger-icon" src="Icons/icons8-hamburger-menu-50.png" alt="Menu" />
+            </button>
+            <img class="brand-icon" src="Icons/icons8-investing-64.png" alt="" aria-hidden="true" />
+            <div class="app-brand">
+              <div class="app-brand-title">Finance App</div>
+              <div class="app-brand-subtitle">
+                Compound growth, FIRE planning, & Retirement Drawdown
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div>
-        <label for="years">Number of Years<span style="color:#ef4444">*</span></label>
-        <input type="number" id="years" min="1" max="300" class="small-input" autocomplete="off" aria-required="true" inputmode="decimal">
-
-      <div>
-        <label for="inflation">Inflation (%)</label>
-        <input type="number" id="inflation" class="small-input" min="0" step="any" inputmode="decimal">
-      </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label for="expense">Exp Ratio (%)</label>
-          <input type="number" id="expense" class="small-input" min="0" step="any" placeholder="e.g. 0.09" inputmode="decimal">
+      <div id="menu-backdrop" class="menu-backdrop" aria-hidden="true"></div>
+      <div id="side-menu" aria-hidden="true">
+        <div class="menu-drawer-top">
+          <button id="menu-back" class="menu-close-button" aria-label="Close navigation menu">
+            X
+          </button>
+          <div class="menu-drawer-brand">
+            <img class="brand-icon" src="Icons/icons8-investing-64.png" alt="" aria-hidden="true" />
+            <div class="menu-drawer-brand-text">Finance App</div>
+          </div>
         </div>
-        <div>
-          <label for="aum">AUM Fee (%)</label>
-          <input type="number" id="aum" class="small-input" min="0" step="any" inputmode="decimal">
+        <div class="menu-section-label">Calculators</div>
+        <button class="menu-link" id="menu-compound">Compound</button>
+        <button class="menu-link" id="menu-fire">FIRE</button>
+        <button class="menu-link" id="menu-monte-carlo">Monte Carlo</button>
+        <div class="menu-footer">
+          Icons by
+          <a
+            href="https://icons8.com/icon/8n6z6pR9QFqC/investing"
+            target="_blank"
+            style="color: #2563eb; text-decoration: underline"
+            >Icons8</a
+          >
         </div>
       </div>
+      <div id="compound-page" class="container" style="position: relative">
+        <h1>Compound Me</h1>
+        <div class="subtitle">Calculate how much your investments can grow over time.</div>
+        <form id="calc-form" autocomplete="off">
+          <label for="starting">Starting Investment ($)<span style="color: #ef4444">*</span></label>
+          <input
+            type="text"
+            id="starting"
+            inputmode="decimal"
+            pattern="[0-9,\.]*"
+            autocomplete="off"
+            aria-required="true"
+          />
 
+          <label for="contribution">Annual Contribution ($)</label>
+          <input type="text" id="contribution" inputmode="decimal" pattern="[0-9,\.]*" />
 
-      <button type="submit">Calculate</button>
-    </form>
-    <div id="results" class="results" style="display:none"></div>
+          <div class="row">
+            <div style="flex: 1">
+              <label for="return">Annual Return (%)<span style="color: #ef4444">*</span></label>
+              <input
+                type="number"
+                id="return"
+                min="0"
+                step="any"
+                class="small-input"
+                autocomplete="off"
+                aria-required="true"
+                inputmode="decimal"
+              />
+            </div>
+          </div>
+          <div>
+            <label for="years">Number of Years<span style="color: #ef4444">*</span></label>
+            <input
+              type="number"
+              id="years"
+              min="1"
+              max="300"
+              class="small-input"
+              autocomplete="off"
+              aria-required="true"
+              inputmode="decimal"
+            />
 
-  </div>
-  <div id="fire-page" class="container" style="display:none;max-width:430px;position:relative;">
-    <h1>FIRE Calculator</h1>
-    <div class="subtitle">Find your Financial Independence (FIRE) number and timeline.</div>
-    <form id="fire-form" autocomplete="off" style="margin-top:0;display:flex;flex-direction:column;gap:0.13em;">
-      <label style="margin-bottom:0.13em;">Current Age
-        <input type="number" id="fire-current-age" min="0" max="120" step="1" inputmode="numeric" style="margin-bottom:0.13em;" />
-      </label>
-      <label style="margin-bottom:0.13em;">Retirement Age
-        <input type="number" id="fire-retirement-age" min="0" max="120" step="1" inputmode="numeric" style="margin-bottom:0.13em;" />
-      </label>
-      <label style="margin-bottom:0.13em;">Current Nest Egg ($)
-        <input type="text" id="fire-nestegg" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
-      </label>
-      <label style="margin-bottom:0.13em;">Annual Contribution ($)
-        <input type="text" id="fire-contribution" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
-      </label>
-      <label style="margin-bottom:0.13em;">Expected Annual Return (%)
-        <input type="number" id="fire-return" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
-      </label>
-      <label style="margin-bottom:0.13em;">Total Annual Fees (%)
-        <input type="number" id="fire-fees" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
-      </label>
-      <label style="margin-bottom:0.13em;">Annual Inflation (%)
-        <input type="number" id="fire-inflation" min="0" step="any" inputmode="decimal" style="margin-bottom:0.13em;" />
-      </label>
-      <label style="margin-bottom:0.13em;">Annual Retirement Spending ($)
-        <input type="text" id="fire-spending" inputmode="decimal" pattern="[0-9,.]*" autocomplete="off" style="margin-bottom:0.13em;" />
-      </label>
-      <label style="margin-bottom:0.13em;">Safe Withdrawal Rate (%)
-        <select id="fire-swr" style="margin-bottom:0.13em;">
-          <option value="3.5">3.5%</option>
-          <option value="4" selected>4%</option>
-          <option value="5">5%</option>
-        </select>
-      </label>
-      <button type="submit" style="margin-top:0.32em;">Calculate</button>
-    </form>
-    <div id="fire-results" class="results" style="display:none;margin-top:1.2em;"></div>
-    <div id="fire-visuals" style="margin-top:1.2em;"></div>
-  </div>
-    <script>
-    // Hamburger menu logic
+            <div>
+              <label for="inflation">Inflation (%)</label>
+              <input
+                type="number"
+                id="inflation"
+                class="small-input"
+                min="0"
+                step="any"
+                inputmode="decimal"
+              />
+            </div>
+          </div>
 
-    // Robust hamburger menu logic — re-queries DOM and uses stable handlers
-    let menuOpen = false;
-    function setHamburgerVisible() {
-      const h = document.getElementById('hamburger-menu');
-      if (h) h.style.display = 'flex';
-    }
-    function openMenu() {
-      const side = document.getElementById('side-menu');
-      if (!side) return;
-      side.style.width = '250px';
-      side.style.pointerEvents = 'auto';
-      menuOpen = true;
-    }
-    function closeMenu() {
-      const side = document.getElementById('side-menu');
-      if (!side) return;
-      side.style.width = '0';
-      side.style.pointerEvents = 'none';
-      menuOpen = false;
-    }
-    window.closeMenu = closeMenu;
+          <div class="row">
+            <div>
+              <label for="expense">Exp Ratio (%)</label>
+              <input
+                type="number"
+                id="expense"
+                class="small-input"
+                min="0"
+                step="any"
+                placeholder="e.g. 0.09"
+                inputmode="decimal"
+              />
+            </div>
+            <div>
+              <label for="aum">AUM Fee (%)</label>
+              <input
+                type="number"
+                id="aum"
+                class="small-input"
+                min="0"
+                step="any"
+                inputmode="decimal"
+              />
+            </div>
+          </div>
 
-    // Named handlers so we can add/remove reliably
-    function hamburgerClickHandler(e) {
-      e.stopPropagation();
-      if (menuOpen) closeMenu(); else openMenu();
-    }
-    function outsideClickHandler(e) {
-      const side = document.getElementById('side-menu');
-      const h = document.getElementById('hamburger-menu');
-      if (!side) return;
-      // console log for debugging outside clicks
-      // console.log('outsideClickHandler', e.target);
-      if (menuOpen && !side.contains(e.target) && e.target !== h) closeMenu();
-    }
+          <button type="submit">Calculate</button>
+        </form>
+        <div id="results" class="results" style="display: none"></div>
+      </div>
+      <div id="fire-page" class="container" style="display: none; position: relative">
+        <h1>FIRE Calculator</h1>
+        <div class="subtitle">Find your Financial Independence (FIRE) number and timeline.</div>
+        <form
+          id="fire-form"
+          autocomplete="off"
+          style="margin-top: 0; display: flex; flex-direction: column; gap: 0.13em"
+        >
+          <label style="margin-bottom: 0.13em"
+            >Current Nest Egg ($)
+            <input
+              type="text"
+              id="fire-nestegg"
+              min="0"
+              step="any"
+              inputmode="decimal"
+              pattern="[0-9,\.]*"
+              style="margin-bottom: 0.13em"
+            />
+          </label>
+          <label style="margin-bottom: 0.13em"
+            >Monthly Contribution ($)
+            <input
+              type="text"
+              id="fire-contribution"
+              min="0"
+              step="any"
+              inputmode="decimal"
+              pattern="[0-9,\.]*"
+              style="margin-bottom: 0.13em"
+            />
+          </label>
+          <label style="margin-bottom: 0.13em"
+            >Expected Annual Return (%)
+            <input
+              type="number"
+              id="fire-return"
+              min="0"
+              step="any"
+              inputmode="decimal"
+              style="margin-bottom: 0.13em"
+            />
+          </label>
+          <label style="margin-bottom: 0.13em"
+            >Total Annual Fees (%)
+            <input
+              type="number"
+              id="fire-fees"
+              min="0"
+              step="any"
+              inputmode="decimal"
+              style="margin-bottom: 0.13em"
+            />
+          </label>
+          <label style="margin-bottom: 0.13em"
+            >Annual Inflation (%)
+            <input
+              type="number"
+              id="fire-inflation"
+              min="0"
+              step="any"
+              inputmode="decimal"
+              style="margin-bottom: 0.13em"
+            />
+          </label>
+          <label style="margin-bottom: 0.13em"
+            >Annual Retirement Spending ($)
+            <input
+              type="text"
+              id="fire-spending"
+              min="0"
+              step="any"
+              inputmode="decimal"
+              pattern="[0-9,\.]*"
+              style="margin-bottom: 0.13em"
+            />
+          </label>
+          <label style="margin-bottom: 0.13em"
+            >Safe Withdrawal Rate (%)
+            <select id="fire-swr" style="margin-bottom: 0.13em">
+              <option value="3.5">3.5%</option>
+              <option value="4" selected>4%</option>
+              <option value="5">5%</option>
+            </select>
+          </label>
+          <button type="submit" style="margin-top: 0.32em">Calculate</button>
+        </form>
+        <div id="fire-results" class="results" style="display: none; margin-top: 1.2em"></div>
+        <div id="fire-visuals" style="margin-top: 1.2em"></div>
+      </div>
 
-    // Attach listeners safely and idempotently
-    function setupMenuListeners() {
-      setHamburgerVisible();
-      const hamburgerEl = document.getElementById('hamburger-menu');
-      const menuBack = document.getElementById('menu-back');
-      if (menuBack) {
-        menuBack.removeEventListener('click', closeMenu);
-        menuBack.addEventListener('click', closeMenu);
-      }
-      if (hamburgerEl) {
-        hamburgerEl.removeEventListener('click', hamburgerClickHandler);
-        hamburgerEl.addEventListener('click', hamburgerClickHandler);
-      }
-      // Attach outside click once
-      if (!window.__menuOutsideAttached) {
-        document.addEventListener('click', outsideClickHandler);
-        window.__menuOutsideAttached = true;
-      }
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-      setupMenuListeners();
-    });
-    // Page switching logic
-    // --- Modular Page Manager ---
-    function initFireCalculator() {
-      document.getElementById('fire-form').onsubmit = function(e) {
-        e.preventDefault();
-        document.querySelectorAll('.fire-inline-error').forEach(el => el.remove());
-        let hasError = false;
+      <div id="monte-carlo-page" class="container" style="display: none; position: relative">
+        <h1>Monte Carlo</h1>
+        <div class="subtitle">Will your money last through retirement given market volatility?</div>
+        <form id="monte-carlo-form" autocomplete="off">
+          <div
+            style="
+              font-weight: 600;
+              font-size: 0.95em;
+              color: #475569;
+              margin-bottom: 0.6em;
+              margin-top: 0.4em;
+            "
+          >
+            Portfolio & Spending
+          </div>
+          <label for="mc-starting"
+            >Starting Portfolio ($)<span style="color: #ef4444">*</span></label
+          >
+          <input
+            type="text"
+            id="mc-starting"
+            inputmode="decimal"
+            pattern="[0-9,\.]*"
+            autocomplete="off"
+            aria-required="true"
+          />
 
-        function showFireError(input, message) {
-          const errorDiv = document.createElement('div');
-          errorDiv.className = 'fire-inline-error';
-          errorDiv.innerHTML = `<img src="Icons/icons8-error-50.png" alt="Error" style="width:1.1em;vertical-align:middle;margin-right:0.3em;"> <span>${message}</span>`;
-          errorDiv.style.color = '#dc2626';
-          errorDiv.style.fontWeight = '500';
-          errorDiv.style.marginBottom = '0.2em';
-          errorDiv.style.display = 'flex';
-          errorDiv.style.alignItems = 'center';
-          errorDiv.style.gap = '0.3em';
-          errorDiv.style.fontSize = '1em';
-          input.parentNode.insertBefore(errorDiv, input);
+          <label for="mc-withdrawal" style="margin-bottom: 0.1em"
+            >Annual Withdrawal ($)<span style="color: #ef4444">*</span></label
+          >
+          <div style="font-size: 0.8em; color: #64748b; margin-bottom: 0.4em">
+            Adjusts upwards annually for inflation
+          </div>
+          <input
+            type="text"
+            id="mc-withdrawal"
+            inputmode="decimal"
+            pattern="[0-9,\.]*"
+            autocomplete="off"
+            aria-required="true"
+          />
+
+          <label for="mc-years">Years in Retirement<span style="color: #ef4444">*</span></label>
+          <input
+            type="text"
+            id="mc-years"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            value="30"
+            autocomplete="off"
+            aria-required="true"
+          />
+
+          <div
+            style="
+              font-weight: 600;
+              font-size: 0.95em;
+              color: #475569;
+              margin-bottom: 0.6em;
+              margin-top: 1em;
+            "
+          >
+            Asset Allocation
+          </div>
+          <div class="asset-allocation-rows">
+            <div class="row" style="margin-bottom: 0.6em; align-items: center">
+              <div style="flex: 2; margin-right: 0.8em">
+                <select class="asset-type" aria-label="Asset Type 1">
+                  <optgroup label="US Equity">
+                    <option value="us-large" selected>US Large Cap</option>
+                    <option value="us-small">US Small Cap</option>
+                    <option value="us-stock-market">US Stock Market</option>
+                  </optgroup>
+                  <optgroup label="Global Equity">
+                    <option value="intl-stocks">Int'l Stocks</option>
+                    <option value="ex-us-stock-market">ex-US Stock Market</option>
+                  </optgroup>
+                  <optgroup label="Fixed Income & Cash">
+                    <option value="us-bonds">US Bonds</option>
+                    <option value="ex-us-bonds">ex-US Bonds</option>
+                    <option value="cash">Cash</option>
+                  </optgroup>
+                  <option value="none">None</option>
+                </select>
+              </div>
+              <div style="flex: 1; display: flex; align-items: center">
+                <input
+                  type="number"
+                  class="asset-weight"
+                  value="80"
+                  min="0"
+                  max="100"
+                  style="margin-bottom: 0; margin-right: 0.3em"
+                  aria-label="Percentage for Asset 1"
+                />
+                %
+              </div>
+            </div>
+            <div class="row" style="margin-bottom: 0.6em; align-items: center">
+              <div style="flex: 2; margin-right: 0.8em">
+                <select class="asset-type" aria-label="Asset Type 2">
+                  <optgroup label="US Equity">
+                    <option value="us-large">US Large Cap</option>
+                    <option value="us-small">US Small Cap</option>
+                    <option value="us-stock-market">US Stock Market</option>
+                  </optgroup>
+                  <optgroup label="Global Equity">
+                    <option value="intl-stocks">Int'l Stocks</option>
+                    <option value="ex-us-stock-market">ex-US Stock Market</option>
+                  </optgroup>
+                  <optgroup label="Fixed Income & Cash">
+                    <option value="us-bonds" selected>US Bonds</option>
+                    <option value="ex-us-bonds">ex-US Bonds</option>
+                    <option value="cash">Cash</option>
+                  </optgroup>
+                  <option value="none">None</option>
+                </select>
+              </div>
+              <div style="flex: 1; display: flex; align-items: center">
+                <input
+                  type="number"
+                  class="asset-weight"
+                  value="20"
+                  min="0"
+                  max="100"
+                  style="margin-bottom: 0; margin-right: 0.3em"
+                  aria-label="Percentage for Asset 2"
+                />
+                %
+              </div>
+            </div>
+            <div class="row" style="margin-bottom: 1em; align-items: center">
+              <div style="flex: 2; margin-right: 0.8em">
+                <select class="asset-type" aria-label="Asset Type 3">
+                  <optgroup label="US Equity">
+                    <option value="us-large">US Large Cap</option>
+                    <option value="us-small">US Small Cap</option>
+                    <option value="us-stock-market">US Stock Market</option>
+                  </optgroup>
+                  <optgroup label="Global Equity">
+                    <option value="intl-stocks">Int'l Stocks</option>
+                    <option value="ex-us-stock-market">ex-US Stock Market</option>
+                  </optgroup>
+                  <optgroup label="Fixed Income & Cash">
+                    <option value="us-bonds">US Bonds</option>
+                    <option value="ex-us-bonds">ex-US Bonds</option>
+                    <option value="cash">Cash</option>
+                  </optgroup>
+                  <option value="none" selected>None</option>
+                </select>
+              </div>
+              <div style="flex: 1; display: flex; align-items: center">
+                <input
+                  type="number"
+                  class="asset-weight"
+                  value="0"
+                  min="0"
+                  max="100"
+                  style="margin-bottom: 0; margin-right: 0.3em"
+                  aria-label="Percentage for Asset 3"
+                />
+                %
+              </div>
+            </div>
+          </div>
+          <div
+            id="allocation-error"
+            style="color: #ef4444; font-size: 0.9em; margin-bottom: 0.6em; display: none"
+          >
+            Total allocation must equal 100%.
+          </div>
+
+          <div
+            style="
+              background: #f8fafc;
+              border: 1px solid #e2e8f0;
+              padding: 0.8em;
+              border-radius: 8px;
+              margin-bottom: 1.2em;
+              font-size: 0.95em;
+            "
+          >
+            <div style="margin-bottom: 0.4em">
+              <strong>Calculated Portfolio Return:</strong> <span id="calculated-return">0</span>%
+            </div>
+            <div>
+              <strong>Calculated Volatility:</strong> <span id="calculated-volatility">0</span>%
+              <span
+                class="info-icon"
+                id="volatility-info-icon"
+                tabindex="0"
+                role="button"
+                aria-label="More info"
+              ></span>
+            </div>
+          </div>
+
+          <label for="mc-inflation">Annual Inflation Rate (%)</label>
+          <input
+            type="number"
+            id="mc-inflation"
+            min="0"
+            step="any"
+            value="3"
+            autocomplete="off"
+            inputmode="decimal"
+          />
+
+          <button type="submit" style="margin-top: 0.32em">Calculate</button>
+        </form>
+        <div id="mc-results" class="results" style="display: none; margin-top: 1.2em"></div>
+        <div id="mc-visuals" style="margin-top: 1.2em"></div>
+      </div>
+      <script>
+        // Hamburger menu logic
+
+        // Robust hamburger menu logic — re-queries DOM and uses stable handlers
+        let menuOpen = false;
+        let menuResizeAttached = false;
+
+        function isDesktopViewport() {
+          return window.matchMedia('(min-width: 820px)').matches;
         }
 
-        // Get inputs
-        const currentAgeInput = document.getElementById('fire-current-age');
-        const retirementAgeInput = document.getElementById('fire-retirement-age');
-        const currentAge = parseFloat(currentAgeInput.value) || 0;
-        const retirementAge = parseFloat(retirementAgeInput.value) || 0;
-
-        const nestEggInput = document.getElementById('fire-nestegg');
-        const contributionInput = document.getElementById('fire-contribution');
-        const spendingInput = document.getElementById('fire-spending');
-        const nestEggParsed = parseCurrencyInput(nestEggInput.value);
-        const annualContributionParsed = parseCurrencyInput(contributionInput.value);
-        const spendingParsed = parseCurrencyInput(spendingInput.value);
-
-        if (nestEggParsed.invalid) {
-          showFireError(nestEggInput, 'Enter a valid dollar amount');
-          hasError = true;
+        function updateHeaderResponsiveState() {
+          setHamburgerVisible();
         }
-        if (annualContributionParsed.invalid) {
-          showFireError(contributionInput, 'Enter a valid dollar amount');
-          hasError = true;
+
+        function setHamburgerVisible() {
+          const h = document.getElementById('hamburger-menu');
+          if (!h) return;
+          h.style.display = 'inline-flex';
         }
-        if (spendingParsed.invalid) {
-          showFireError(spendingInput, 'Enter a valid dollar amount');
-          hasError = true;
+        function openMenu() {
+          const side = document.getElementById('side-menu');
+          const backdrop = document.getElementById('menu-backdrop');
+          if (!side) return;
+          side.classList.add('open');
+          side.setAttribute('aria-hidden', 'false');
+          if (backdrop) backdrop.classList.add('open');
+          document.body.style.overflow = 'hidden';
+          menuOpen = true;
         }
-        if (hasError) return;
+        function closeMenu() {
+          const side = document.getElementById('side-menu');
+          const backdrop = document.getElementById('menu-backdrop');
+          if (!side) return;
+          side.classList.remove('open');
+          side.setAttribute('aria-hidden', 'true');
+          if (backdrop) backdrop.classList.remove('open');
+          document.body.style.overflow = '';
+          menuOpen = false;
+        }
+        window.closeMenu = closeMenu;
 
-        const nestEgg = nestEggParsed.value;
-        const monthlyContribution = annualContributionParsed.value / 12;
-        const annualReturn = parseFloat(document.getElementById('fire-return').value) || 0;
-        const annualFees = parseFloat(document.getElementById('fire-fees').value) || 0;
-        const inflation = parseFloat(document.getElementById('fire-inflation').value) || 0;
-        const annualSpending = spendingParsed.value;
-        const swr = parseFloat(document.getElementById('fire-swr').value) / 100;
+        // Named handlers so we can add/remove reliably
+        function hamburgerClickHandler(e) {
+          e.stopPropagation();
+          if (menuOpen) closeMenu();
+          else openMenu();
+        }
+        function outsideClickHandler(e) {
+          const side = document.getElementById('side-menu');
+          const h = document.getElementById('hamburger-menu');
+          const backdrop = document.getElementById('menu-backdrop');
+          if (!side) return;
+          if (menuOpen && backdrop && e.target === backdrop) closeMenu();
+          if (menuOpen && !side.contains(e.target) && (!h || !h.contains(e.target))) closeMenu();
+        }
 
-        // Calculate FIRE number (inflation-adjusted for year 0)
-        const fireNumber = annualSpending / swr;
-
-        // Real net return
-        const realNetReturn = (annualReturn - annualFees - inflation) / 100;
-        const realNetMonthly = Math.pow(1 + realNetReturn, 1/12) - 1;
-
-        // Simulate month-by-month
-        let portfolio = nestEgg;
-        let months = 0;
-        let fireNumberInfl = fireNumber;
-        let fireReached = false;
-        const portfolioHistory = [portfolio];
-        const fireLine = [fireNumber];
-        // For fee penalty: simulate with 0% fees
-        let portfolioNoFees = nestEgg;
-        const portfolioNoFeesHistory = [portfolioNoFees];
-        let monthsNoFees = 0;
-        const realNetReturnNoFees = (annualReturn - inflation) / 100;
-        const realNetMonthlyNoFees = Math.pow(1 + realNetReturnNoFees, 1/12) - 1;
-        let fireReachedNoFees = false;
-
-        // Simulate up to 60 years (720 months)
-        for (let i = 1; i <= 720; i++) {
-          // Adjust FIRE number for inflation
-          fireNumberInfl *= (1 + inflation / 100 / 12);
-          // With fees
-          portfolio = portfolio * (1 + realNetMonthly) + monthlyContribution;
-          portfolioHistory.push(portfolio);
-          fireLine.push(fireNumberInfl);
-          if (!fireReached && portfolio >= fireNumberInfl) {
-            months = i;
-            fireReached = true;
+        function setActiveNav(page) {
+          const compoundLink = document.getElementById('menu-compound');
+          const fireLink = document.getElementById('menu-fire');
+          const mcLink = document.getElementById('menu-monte-carlo');
+          if (compoundLink) {
+            const active = page === 'compound';
+            compoundLink.classList.toggle('is-active', active);
           }
-          // No fees
-          portfolioNoFees = portfolioNoFees * (1 + realNetMonthlyNoFees) + monthlyContribution;
-          portfolioNoFeesHistory.push(portfolioNoFees);
-          if (!fireReachedNoFees && portfolioNoFees >= fireNumberInfl) {
-            monthsNoFees = i;
-            fireReachedNoFees = true;
+          if (fireLink) {
+            const active = page === 'fire';
+            fireLink.classList.toggle('is-active', active);
+          }
+          if (mcLink) {
+            const active = page === 'monte-carlo';
+            mcLink.classList.toggle('is-active', active);
           }
         }
 
-        // Progress gauge
-        const percentToFire = Math.min(100, (nestEgg / fireNumber) * 100);
-        // Time remaining
-        const years = fireReached ? Math.floor(months / 12) : '—';
-        const remMonths = fireReached ? months % 12 : '—';
-        // Calculate retirement age based on time to FI
-        let retirementAgeDisplay = '';
-        if (currentAge > 0 && fireReached) {
-          const yearsToFire = months / 12;
-          const projectedRetirementAge = currentAge + yearsToFire;
-          retirementAgeDisplay = `<div style="margin-bottom:0.7em;">Projected Retirement Age: <b>${projectedRetirementAge.toFixed(1)} years old</b></div>`;
-        }
-        // Check if retirement age goal is provided
-        let ageGoalComparison = '';
-        if (currentAge > 0 && retirementAge > 0 && fireReached) {
-          const yearsToFire = months / 12;
-          const projectedRetirementAge = currentAge + yearsToFire;
-          const yearsDifference = projectedRetirementAge - retirementAge;
-          if (Math.abs(yearsDifference) < 0.1) {
-            ageGoalComparison = `<div style="margin-bottom:0.7em;color:#22c55e;">✓ You'll reach FIRE right at your target retirement age!</div>`;
-          } else if (yearsDifference < 0) {
-            ageGoalComparison = `<div style="margin-bottom:0.7em;color:#22c55e;">✓ You'll reach FIRE <b>${Math.abs(yearsDifference).toFixed(1)} years earlier</b> than your target retirement age of ${retirementAge}!</div>`;
-          } else {
-            ageGoalComparison = `<div style="margin-bottom:0.7em;color:#f59e0b;">You'll reach FIRE <b>${yearsDifference.toFixed(1)} years later</b> than your target retirement age of ${retirementAge}.</div>`;
+        // Attach listeners safely and idempotently
+        function setupMenuListeners() {
+          updateHeaderResponsiveState();
+          const hamburgerEl = document.getElementById('hamburger-menu');
+          const menuBack = document.getElementById('menu-back');
+          const menuBackdrop = document.getElementById('menu-backdrop');
+          if (menuBack) {
+            menuBack.removeEventListener('click', closeMenu);
+            menuBack.addEventListener('click', closeMenu);
+          }
+          if (menuBackdrop) {
+            menuBackdrop.removeEventListener('click', closeMenu);
+            menuBackdrop.addEventListener('click', closeMenu);
+          }
+          if (hamburgerEl) {
+            hamburgerEl.removeEventListener('click', hamburgerClickHandler);
+            hamburgerEl.addEventListener('click', hamburgerClickHandler);
+          }
+          // Attach outside click once
+          if (!window.__menuOutsideAttached) {
+            document.addEventListener('click', outsideClickHandler);
+            window.__menuOutsideAttached = true;
+          }
+          if (!menuResizeAttached) {
+            window.addEventListener('resize', updateHeaderResponsiveState);
+            window.addEventListener('orientationchange', updateHeaderResponsiveState);
+            menuResizeAttached = true;
           }
         }
-        // Fee penalty
-        let feePenalty = '';
-        if (fireReached && fireReachedNoFees) {
-          const penaltyMonths = months - monthsNoFees;
-          const penaltyYears = Math.floor(penaltyMonths / 12);
-          const penaltyRemMonths = penaltyMonths % 12;
-          feePenalty = `Your fees are delaying your retirement by <b>${penaltyYears} years${penaltyRemMonths ? (', ' + penaltyRemMonths + ' months') : ''}</b>.`;
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+          setupMenuListeners();
+        });
+        // Page switching logic
+        // --- Modular Page Manager ---
+        function initFireCalculator() {
+          document.getElementById('fire-form').onsubmit = function (e) {
+            e.preventDefault();
+            // Get inputs
+            const nestEgg =
+              parseFloat(document.getElementById('fire-nestegg').value.replace(/,/g, '')) || 0;
+            const monthlyContribution =
+              parseFloat(document.getElementById('fire-contribution').value.replace(/,/g, '')) || 0;
+            const annualReturn = parseFloat(document.getElementById('fire-return').value) || 0;
+            const annualFees = parseFloat(document.getElementById('fire-fees').value) || 0;
+            const inflation = parseFloat(document.getElementById('fire-inflation').value) || 0;
+            const annualSpending =
+              parseFloat(document.getElementById('fire-spending').value.replace(/,/g, '')) || 0;
+            const swr = parseFloat(document.getElementById('fire-swr').value) / 100;
 
-        // Render results
-        const fireResults = document.getElementById('fire-results');
-        fireResults.style.display = 'block';
-        fireResults.innerHTML = `
-          <div style="font-size:1.08em;margin-bottom:0.7em;"><b>FIRE Number:</b> $${fireNumber.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
+            // Calculate FIRE number (in today's dollars)
+            const fireNumber = annualSpending / swr;
+
+            // Exact Real Net Return (Fisher Equation)
+            const inflationRate = inflation / 100;
+            const nominalNetReturn = (annualReturn - annualFees) / 100;
+            const realNetReturn = (1 + nominalNetReturn) / (1 + inflationRate) - 1;
+            const realNetMonthly = Math.pow(1 + realNetReturn, 1 / 12) - 1;
+
+            // Simulate month-by-month
+            let portfolio = nestEgg;
+            let months = 0;
+            let fireReached = false;
+            const portfolioHistory = [portfolio];
+            const fireLine = [fireNumber];
+            // For fee penalty: simulate with 0% fees
+            let portfolioNoFees = nestEgg;
+            const portfolioNoFeesHistory = [portfolioNoFees];
+            let monthsNoFees = 0;
+            const nominalNetReturnNoFees = annualReturn / 100;
+            const realNetReturnNoFees = (1 + nominalNetReturnNoFees) / (1 + inflationRate) - 1;
+            const realNetMonthlyNoFees = Math.pow(1 + realNetReturnNoFees, 1 / 12) - 1;
+            let fireReachedNoFees = false;
+
+            // Simulate up to 60 years (720 months)
+            for (let i = 1; i <= 720; i++) {
+              // With fees (in real terms)
+              portfolio = portfolio * (1 + realNetMonthly) + monthlyContribution;
+              portfolioHistory.push(portfolio);
+              fireLine.push(fireNumber);
+              if (!fireReached && portfolio >= fireNumber) {
+                months = i;
+                fireReached = true;
+              }
+              // No fees (in real terms)
+              portfolioNoFees = portfolioNoFees * (1 + realNetMonthlyNoFees) + monthlyContribution;
+              portfolioNoFeesHistory.push(portfolioNoFees);
+              if (!fireReachedNoFees && portfolioNoFees >= fireNumber) {
+                monthsNoFees = i;
+                fireReachedNoFees = true;
+              }
+            }
+
+            // Progress gauge
+            const percentToFire = Math.min(100, (nestEgg / fireNumber) * 100);
+            // Time remaining
+            const years = fireReached ? Math.floor(months / 12) : '—';
+            const remMonths = fireReached ? months % 12 : '—';
+            // Fee penalty
+            let feePenalty = '';
+            if (fireReached && fireReachedNoFees) {
+              const penaltyMonths = months - monthsNoFees;
+              const penaltyYears = Math.floor(penaltyMonths / 12);
+              const penaltyRemMonths = penaltyMonths % 12;
+              feePenalty = `Your fees are delaying your retirement by <b>${penaltyYears} years${penaltyRemMonths ? ', ' + penaltyRemMonths + ' months' : ''}</b>.`;
+            }
+
+            // Render results
+            const fireResults = document.getElementById('fire-results');
+            fireResults.style.display = 'block';
+            fireResults.innerHTML = `
+          <div style="font-size:1.08em;margin-bottom:0.7em;"><b>FIRE Number:</b> ${formatCurrency(fireNumber)}</div>
           <div style="margin-bottom:0.7em;">Progress to FI: <b>${percentToFire.toFixed(1)}%</b></div>
-          <div style="margin-bottom:0.7em;">Freedom Clock: <b>${years} years${remMonths !== '—' ? (', ' + remMonths + ' months') : ''}</b> to FI</div>
-          ${retirementAgeDisplay}
-          ${ageGoalComparison}
+          <div style="margin-bottom:0.7em;">Freedom Clock: <b>${years} years${remMonths !== '—' ? ', ' + remMonths + ' months' : ''}</b> to FI</div>
           <div style="margin-bottom:0.7em;">${feePenalty}</div>
         `;
 
-        // Render chart
-        loadChartJs(function() {
-          renderFireChart(portfolioHistory, fireLine, portfolioNoFeesHistory, months, fireReached);
+            // Render chart
+            loadChartJs(function () {
+              renderFireChart(
+                portfolioHistory,
+                fireLine,
+                portfolioNoFeesHistory,
+                months,
+                fireReached,
+              );
+            });
+          };
+        }
+        function destroyFireCalculator() {
+          // Optionally clear results, reset form, etc.
+          document.getElementById('fire-results').style.display = 'none';
+          document.getElementById('fire-results').innerHTML = '';
+          document.getElementById('fire-visuals').innerHTML = '';
+          document.getElementById('fire-form').onsubmit = null;
+        }
+        function destroyCompoundCalculator() {
+          // Optionally clear results, reset form, etc.
+          document.getElementById('results').style.display = 'none';
+          document.getElementById('results').innerHTML = '';
+          document.getElementById('calc-form').onsubmit = null;
+        }
+        function destroyMonteCarloCalculator() {
+          document.getElementById('mc-results').style.display = 'none';
+          document.getElementById('mc-results').innerHTML = '';
+          document.getElementById('mc-visuals').innerHTML = '';
+          document.getElementById('monte-carlo-form').onsubmit = null;
+        }
+        function showPage(page) {
+          document.getElementById('compound-page').style.display =
+            page === 'compound' ? '' : 'none';
+          document.getElementById('fire-page').style.display = page === 'fire' ? '' : 'none';
+          document.getElementById('monte-carlo-page').style.display =
+            page === 'monte-carlo' ? '' : 'none';
+          if (page === 'compound') {
+            destroyFireCalculator();
+            destroyMonteCarloCalculator();
+            initCompoundCalculator();
+          } else if (page === 'fire') {
+            destroyCompoundCalculator();
+            destroyMonteCarloCalculator();
+            initFireCalculator();
+          } else if (page === 'monte-carlo') {
+            destroyCompoundCalculator();
+            destroyFireCalculator();
+            initMonteCarloCalculator();
+          }
+          setActiveNav(page);
+          setupMenuListeners(); // Always re-attach menu listeners after page switch
+        }
+        document.getElementById('menu-compound').onclick = function () {
+          showPage('compound');
+          closeMenu();
+        };
+        document.getElementById('menu-fire').onclick = function () {
+          showPage('fire');
+          closeMenu();
+        };
+        document.getElementById('menu-monte-carlo').onclick = function () {
+          showPage('monte-carlo');
+          closeMenu();
+        };
+        // Show compound calculator by default
+        document.addEventListener('DOMContentLoaded', function () {
+          showPage('compound');
         });
-      };
-    }
-    function destroyFireCalculator() {
-      // Optionally clear results, reset form, etc.
-      document.getElementById('fire-results').style.display = 'none';
-      document.getElementById('fire-results').innerHTML = '';
-      document.getElementById('fire-visuals').innerHTML = '';
-      document.getElementById('fire-form').onsubmit = null;
-    }
-    function destroyCompoundCalculator() {
-      // Optionally clear results, reset form, etc.
-      document.getElementById('results').style.display = 'none';
-      document.getElementById('results').innerHTML = '';
-      document.getElementById('calc-form').onsubmit = null;
-    }
-    function showPage(page) {
-      document.getElementById('compound-page').style.display = (page === 'compound') ? '' : 'none';
-      document.getElementById('fire-page').style.display = (page === 'fire') ? '' : 'none';
-      if (page === 'compound') {
-        destroyFireCalculator();
-        // Re-attach compound calculator logic
-        initCompoundCalculator();
-      } else if (page === 'fire') {
-        destroyCompoundCalculator();
-        initFireCalculator();
-      }
-      setupMenuListeners(); // Always re-attach menu listeners after page switch
-    }
-    document.getElementById('menu-compound').onclick = function() {
-      showPage('compound');
-      closeMenu();
-    };
-    document.getElementById('menu-fire').onclick = function() {
-      showPage('fire');
-      closeMenu();
-    };
-    // Show compound calculator by default
-    document.addEventListener('DOMContentLoaded', function() {
-      showPage('compound');
-    });
-    // Auto-format input with commas for readability
-    function addCommaFormatting(input) {
-      input.addEventListener('input', function(e) {
-        // Remove all commas
-        let value = input.value.replace(/,/g, '');
-        // Only allow digits and decimal
-        if (!/^\d*(\.\d*)?$/.test(value)) {
-          input.value = value.replace(/[^\d.]/g, '');
-          return;
-        }
-        if (value === '') {
-          input.value = '';
-          return;
-        }
-        // Format integer part only
-        let parts = value.split('.');
-        let intPart = parts[0];
-        let decPart = parts[1] !== undefined ? '.' + parts[1] : '';
-        let formatted = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + decPart;
-        // Save cursor position from right
-        let posFromRight = input.value.length - input.selectionStart;
-        input.value = formatted;
-        // Restore cursor position
-        let newPos = input.value.length - posFromRight;
-        input.setSelectionRange(newPos, newPos);
-      });
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-      addCommaFormatting(document.getElementById('starting'));
-      addCommaFormatting(document.getElementById('contribution'));
-      addCommaFormatting(document.getElementById('fire-nestegg'));
-      addCommaFormatting(document.getElementById('fire-contribution'));
-      addCommaFormatting(document.getElementById('fire-spending'));
-    });
-    function parseCurrencyInput(value) {
-      const cleaned = value.replace(/,/g, '').trim();
-      if (cleaned === '') return { value: 0, invalid: false };
-      if (!/^(\d+\.?\d*|\.\d+)$/.test(cleaned)) return { value: 0, invalid: true };
-      return { value: parseFloat(cleaned), invalid: false };
-    }
-    function formatCurrency(n) {
-      return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-    }
-    function formatPercent(n, digits = 2) {
-      return n.toFixed(digits) + '%';
-    }
-    function calculateCompound(params) {
-      const {
-        startingBalance,
-        annualContribution,
-        grossAnnualReturn,
-        expenseRatio = 0,
-        aumFee = 0,
-        years,
-        inflation = 0,
-      } = params;
-      const gross = grossAnnualReturn / 100;
-      const expense = expenseRatio / 100;
-      const aum = aumFee / 100;
-      let effectiveAnnual = gross - expense - aum - (inflation / 100);
-      effectiveAnnual = Math.max(effectiveAnnual, 0);
-      const monthlyRate = Math.pow(1 + effectiveAnnual, 1 / 12) - 1;
-      let balance = startingBalance;
-      let totalContributions = startingBalance;
-      let totalInterest = 0;
-      for (let year = 1; year <= years; year++) {
-        for (let month = 1; month <= 12; month++) {
-          const interest = balance * monthlyRate;
-          const monthlyContribution = annualContribution / 12;
-          balance += interest + monthlyContribution;
-          totalInterest += interest;
-          totalContributions += monthlyContribution;
-        }
-      }
-      return {
-        finalBalance: balance,
-        totalContributions,
-        totalInterest,
-        effectiveAnnual: effectiveAnnual * 100,
-      };
-    }
-    function loadChartJs(callback) {
-      if (window.Chart) { callback(); return; }
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
-      script.onload = callback;
-      document.head.appendChild(script);
-    }
+        function sanitizeNumericString(rawValue, integerOnly = false) {
+          let value = String(rawValue ?? '')
+            .trim()
+            .replace(/,/g, '')
+            .replace(/\s+/g, '')
+            .replace(/[^\d.]/g, '');
 
-    function renderFireChart(portfolioHistory, fireLine, portfolioNoFeesHistory, months, fireReached) {
-      const container = document.getElementById('fire-visuals');
-      container.innerHTML = '<div class="chart-container" style="max-width:430px;"><canvas id="fireChart"></canvas></div>';
-      if (window.myFireChart) { window.myFireChart.destroy(); }
-      const ctx = document.getElementById('fireChart').getContext('2d');
-      const labels = [], portData = [], fireData = [], noFeesData = [];
-      for (let i = 0; i < portfolioHistory.length; i += 12) {
-        labels.push('Yr ' + Math.round(i / 12));
-        portData.push(Math.round(portfolioHistory[i]));
-        fireData.push(Math.round(fireLine[i]));
-        noFeesData.push(Math.round(portfolioNoFeesHistory[i]));
-      }
-      window.myFireChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [
-            { label: 'Portfolio (with fees)', data: portData, borderColor: 'rgba(34,197,94,1)', backgroundColor: 'rgba(34,197,94,0.1)', pointRadius: 0, fill: true },
-            { label: 'Portfolio (no fees)', data: noFeesData, borderColor: 'rgba(71,85,105,0.6)', backgroundColor: 'transparent', borderDash: [5,5], pointRadius: 0, fill: false },
-            { label: 'FIRE Number', data: fireData, borderColor: 'rgba(239,68,68,1)', backgroundColor: 'transparent', borderDash: [8,4], pointRadius: 0, fill: false },
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            tooltip: { callbacks: { label: c => c.dataset.label + ': $' + c.parsed.y.toLocaleString() } },
-            legend: { position: 'top', labels: { boxWidth: 16, font: { size: 12 } } }
-          },
-          scales: {
-            x: { title: { display: true, text: 'Year', font: { size: 13 } } },
-            y: { beginAtZero: false, title: { display: true, text: 'Value ($)', font: { size: 13 } }, ticks: { callback: v => '$' + v.toLocaleString() } }
+          // Keep only the first decimal point.
+          const firstDotIndex = value.indexOf('.');
+          if (firstDotIndex !== -1) {
+            value =
+              value.slice(0, firstDotIndex + 1) + value.slice(firstDotIndex + 1).replace(/\./g, '');
           }
-        }
-      });
-    }
 
-    function renderCompoundChartForCompoundMe(startingBalance, annualContribution, gross, expense, aum, inflation, years) {
-      const labels = [];
-      const contributions = [];
-      const keepableGrowth = [];
-      const lostToFees = [];
-      let balNoFees = startingBalance;
-      let balWithFees = startingBalance;
-      let contribSum = startingBalance;
-      for (let year = 1; year <= years; year++) {
-        for (let month = 1; month <= 12; month++) {
-          const monthlyContribution = annualContribution / 12;
-          const intNoFees = balNoFees * (Math.pow(1 + (gross - inflation), 1/12) - 1);
-          balNoFees += intNoFees + monthlyContribution;
-          const intWithFees = balWithFees * (Math.pow(1 + (gross - expense - aum - inflation), 1/12) - 1);
-          balWithFees += intWithFees + monthlyContribution;
-          contribSum += monthlyContribution;
-        }
-        labels.push('Year ' + year);
-        contributions.push(Math.round(contribSum));
-        keepableGrowth.push(Math.round(balWithFees - contribSum));
-        lostToFees.push(Math.round(balNoFees - balWithFees));
-      }
-      const ctx = document.getElementById('compoundChart').getContext('2d');
-      if (window.myChart) { window.myChart.destroy(); }
-      window.myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [
-            { label: 'Lost Growth to Fees', data: lostToFees, fill: true, backgroundColor: 'rgba(239,68,68,0.32)', borderColor: 'rgba(239,68,68,1)', pointRadius: 0, stack: 'Stack 0', order: 3 },
-            { label: 'Keepable Growth', data: keepableGrowth, fill: true, backgroundColor: 'rgba(34,197,94,0.32)', borderColor: 'rgba(34,197,94,1)', pointRadius: 0, stack: 'Stack 0', order: 2 },
-            { label: 'Contributions', data: contributions, fill: true, backgroundColor: 'rgba(71,85,105,0.32)', borderColor: 'rgba(71,85,105,1)', pointRadius: 0, stack: 'Stack 0', order: 1 },
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': $' + ctx.parsed.y.toLocaleString() } },
-            legend: { position: 'top', labels: { boxWidth: 18, font: { size: 13 } } },
-          },
-          scales: {
-            x: { title: { display: true, text: 'Year', font: { size: 14 } } },
-            y: { title: { display: true, text: 'Total Value ($)', font: { size: 14 } }, beginAtZero: true, stacked: true, ticks: { callback: v => '$' + v.toLocaleString() } }
+          if (integerOnly) {
+            value = value.split('.')[0];
           }
-        }
-      });
-    }
 
-    function initCompoundCalculator() {
-      document.getElementById('calc-form').onsubmit = function(e) {
-        e.preventDefault();
-        document.querySelectorAll('.inline-error').forEach(el => el.remove());
-        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-        let hasError = false;
-      // Helper to show error
-      function showError(input, message) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'inline-error';
-        errorDiv.innerHTML = `<img src="Icons/icons8-error-50.png" alt="Error" style="width:1.1em;vertical-align:middle;margin-right:0.3em;"> <span>${message}</span>`;
-        errorDiv.style.color = '#dc2626';
-        errorDiv.style.fontWeight = '500';
-        errorDiv.style.marginBottom = '0.2em';
-        errorDiv.style.display = 'flex';
-        errorDiv.style.alignItems = 'center';
-        errorDiv.style.gap = '0.3em';
-        errorDiv.style.fontSize = '1em';
-        input.parentNode.insertBefore(errorDiv, input);
-      }
-      // Validate required fields
-      const startingInput = document.getElementById('starting');
-      const returnInput = document.getElementById('return');
-      const yearsInput = document.getElementById('years');
-      let startingBalance = parseFloat(startingInput.value.replace(/,/g, ''));
-      let grossAnnualReturn = parseFloat(returnInput.value);
-      let years = parseInt(yearsInput.value, 10);
-      if (!startingInput.value.trim()) {
-        showError(startingInput, 'This field cannot be blank');
-        hasError = true;
-      }
-      if (!returnInput.value.trim()) {
-        showError(returnInput, 'This field cannot be blank');
-        hasError = true;
-      }
-      if (!yearsInput.value.trim()) {
-        showError(yearsInput, 'This field cannot be blank');
-        hasError = true;
-      }
-      if (hasError) return;
-      startingBalance = startingBalance || 0;
-      grossAnnualReturn = grossAnnualReturn || 0;
-      years = years || 0;
-      const annualContribution = parseFloat(document.getElementById('contribution').value.replace(/,/g, '')) || 0;
-      const expenseRatio = parseFloat(document.getElementById('expense').value) || 0;
-      const aumFee = parseFloat(document.getElementById('aum').value) || 0;
-      const inflation = parseFloat(document.getElementById('inflation').value) || 0;
-      const results = calculateCompound({
-        startingBalance,
-        annualContribution,
-        grossAnnualReturn,
-        expenseRatio,
-        aumFee,
-        years,
-        inflation,
-      });
-      const resultsDiv = document.getElementById('results');
-      // Calculate total fees lost
-      const gross = grossAnnualReturn / 100;
-      const expense = expenseRatio / 100;
-      const aum = aumFee / 100;
-      const inflationDecimal = inflation / 100;
-      const effectiveAnnual = Math.max(gross - expense - aum - inflationDecimal, 0);
-      // Simulate no-fee scenario
-      let balanceNoFees = startingBalance;
-      let balanceExpenseOnly = startingBalance;
-      let balanceAumOnly = startingBalance;
-      let balanceBothFees = startingBalance;
-      for (let year = 1; year <= years; year++) {
-        for (let month = 1; month <= 12; month++) {
-          const monthlyContribution = annualContribution / 12;
-          // No fees
-          const interestNoFees = balanceNoFees * (Math.pow(1 + gross, 1/12) - 1);
-          balanceNoFees += interestNoFees + monthlyContribution;
-          // Expense ratio only
-          const interestExpenseOnly = balanceExpenseOnly * (Math.pow(1 + (gross - expense), 1/12) - 1);
-          balanceExpenseOnly += interestExpenseOnly + monthlyContribution;
-          // AUM only
-          const interestAumOnly = balanceAumOnly * (Math.pow(1 + (gross - aum), 1/12) - 1);
-          balanceAumOnly += interestAumOnly + monthlyContribution;
-          // Both fees
-          const interestBothFees = balanceBothFees * (Math.pow(1 + (gross - expense - aum), 1/12) - 1);
-          balanceBothFees += interestBothFees + monthlyContribution;
+          return value;
         }
-      }
-      // Proportional attribution logic
-      const feesLost = balanceNoFees - balanceBothFees;
-      let impactExpense = 0, impactAum = 0;
-      const totalFee = expense + aum;
-      if (totalFee > 0) {
-        impactExpense = feesLost * (expense / totalFee);
-        impactAum = feesLost * (aum / totalFee);
-      }
-      resultsDiv.innerHTML = `
+
+        function formatWithCommas(value) {
+          if (!value) return '';
+          const hasTrailingDot = value.endsWith('.');
+          const parts = value.split('.');
+          const intPart = parts[0] || '0';
+          const decPart = parts[1];
+          const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+          if (hasTrailingDot) {
+            return formattedInt + '.';
+          }
+          if (decPart !== undefined) {
+            return formattedInt + '.' + decPart;
+          }
+          return formattedInt;
+        }
+
+        // Auto-format currency-like input with commas and sanitize pasted values.
+        function addCommaFormatting(input) {
+          if (!input) return;
+
+          input.addEventListener('input', function () {
+            const sanitized = sanitizeNumericString(input.value);
+            if (sanitized === '') {
+              input.value = '';
+              return;
+            }
+            const formatted = formatWithCommas(sanitized);
+
+            // Save cursor position from right for smoother typing experience.
+            const selectionStart = input.selectionStart;
+            const posFromRight =
+              typeof selectionStart === 'number' ? input.value.length - selectionStart : 0;
+            input.value = formatted;
+
+            if (typeof selectionStart === 'number') {
+              const newPos = Math.max(0, input.value.length - posFromRight);
+              input.setSelectionRange(newPos, newPos);
+            }
+          });
+
+          input.addEventListener('paste', function (e) {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window['clipboardData']).getData('text') || '';
+            const sanitized = sanitizeNumericString(pasted);
+            input.value = formatWithCommas(sanitized);
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+          });
+        }
+
+        // Sanitize pasted values for type=number fields (e.g. "7%" => "7").
+        function addNumberPasteSanitization(input, integerOnly = false) {
+          if (!input) return;
+
+          input.addEventListener('paste', function (e) {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window['clipboardData']).getData('text') || '';
+            input.value = sanitizeNumericString(pasted, integerOnly);
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+          });
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+          addCommaFormatting(document.getElementById('starting'));
+          addCommaFormatting(document.getElementById('contribution'));
+          addCommaFormatting(document.getElementById('fire-nestegg'));
+          addCommaFormatting(document.getElementById('fire-contribution'));
+          addCommaFormatting(document.getElementById('fire-spending'));
+          addCommaFormatting(document.getElementById('mc-starting'));
+          addCommaFormatting(document.getElementById('mc-withdrawal'));
+
+          addNumberPasteSanitization(document.getElementById('return'));
+          addNumberPasteSanitization(document.getElementById('years'), true);
+          addNumberPasteSanitization(document.getElementById('inflation'));
+          addNumberPasteSanitization(document.getElementById('expense'));
+          addNumberPasteSanitization(document.getElementById('aum'));
+          addNumberPasteSanitization(document.getElementById('fire-return'));
+          addNumberPasteSanitization(document.getElementById('fire-fees'));
+          addNumberPasteSanitization(document.getElementById('fire-inflation'));
+          addNumberPasteSanitization(document.getElementById('mc-years'), true);
+          addNumberPasteSanitization(document.getElementById('mc-return'));
+          addNumberPasteSanitization(document.getElementById('mc-inflation'));
+          addNumberPasteSanitization(document.getElementById('mc-volatility'));
+        });
+        function formatCurrency(n) {
+          return n.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0,
+          });
+        }
+        function formatPercent(n, digits = 2) {
+          return n.toFixed(digits) + '%';
+        }
+        function calculateCompound(params) {
+          const {
+            startingBalance,
+            annualContribution,
+            grossAnnualReturn,
+            expenseRatio = 0,
+            aumFee = 0,
+            years,
+            inflation = 0,
+          } = params;
+          const gross = grossAnnualReturn / 100;
+          const expense = expenseRatio / 100;
+          const aum = aumFee / 100;
+          const inflationRate = inflation / 100;
+
+          // Exact Real Return (Fisher Equation)
+          const effectiveAnnual = (1 + gross - expense - aum) / (1 + inflationRate) - 1;
+
+          const monthlyRate = Math.pow(1 + effectiveAnnual, 1 / 12) - 1;
+          let balance = startingBalance;
+          let totalContributions = startingBalance;
+          let totalInterest = 0;
+          for (let year = 1; year <= years; year++) {
+            for (let month = 1; month <= 12; month++) {
+              const interest = balance * monthlyRate;
+              const monthlyContribution = annualContribution / 12;
+              balance += interest + monthlyContribution;
+              totalInterest += interest;
+              totalContributions += monthlyContribution;
+            }
+          }
+          return {
+            finalBalance: balance,
+            totalContributions,
+            totalInterest,
+            effectiveAnnual: effectiveAnnual * 100,
+          };
+        }
+        function loadChartJs(callback) {
+          if (window.Chart) {
+            callback();
+            return;
+          }
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+          script.onload = callback;
+          document.head.appendChild(script);
+        }
+
+        function renderFireChart(
+          portfolioHistory,
+          fireLine,
+          portfolioNoFeesHistory,
+          months,
+          fireReached,
+        ) {
+          const container = document.getElementById('fire-visuals');
+          container.innerHTML =
+            '<div class="chart-container" style="max-width:430px;"><canvas id="fireChart"></canvas></div>';
+          if (window.myFireChart) {
+            window.myFireChart.destroy();
+          }
+          const ctx = document.getElementById('fireChart').getContext('2d');
+          const labels = [],
+            portData = [],
+            fireData = [],
+            noFeesData = [];
+          for (let i = 0; i < portfolioHistory.length; i += 12) {
+            labels.push('Yr ' + Math.round(i / 12));
+            portData.push(Math.round(portfolioHistory[i]));
+            fireData.push(Math.round(fireLine[i]));
+            noFeesData.push(Math.round(portfolioNoFeesHistory[i]));
+          }
+          window.myFireChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: 'Portfolio (with fees)',
+                  data: portData,
+                  borderColor: 'rgba(34,197,94,1)',
+                  backgroundColor: 'rgba(34,197,94,0.1)',
+                  pointRadius: 0,
+                  fill: true,
+                },
+                {
+                  label: 'Portfolio (no fees)',
+                  data: noFeesData,
+                  borderColor: 'rgba(71,85,105,0.6)',
+                  backgroundColor: 'transparent',
+                  borderDash: [5, 5],
+                  pointRadius: 0,
+                  fill: false,
+                },
+                {
+                  label: 'FIRE Number',
+                  data: fireData,
+                  borderColor: 'rgba(239,68,68,1)',
+                  backgroundColor: 'transparent',
+                  borderDash: [8, 4],
+                  pointRadius: 0,
+                  fill: false,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              interaction: { mode: 'index', intersect: false },
+              plugins: {
+                tooltip: {
+                  callbacks: {
+                    label: (c) => c.dataset.label + ': $' + c.parsed.y.toLocaleString(),
+                  },
+                },
+                legend: { position: 'top', labels: { boxWidth: 16, font: { size: 12 } } },
+              },
+              scales: {
+                x: { title: { display: true, text: 'Year', font: { size: 13 } } },
+                y: {
+                  beginAtZero: false,
+                  title: { display: true, text: 'Value ($)', font: { size: 13 } },
+                  ticks: { callback: (v) => '$' + v.toLocaleString() },
+                },
+              },
+            },
+          });
+        }
+
+        function renderCompoundChartForCompoundMe(
+          startingBalance,
+          annualContribution,
+          gross,
+          expense,
+          aum,
+          inflation,
+          years,
+        ) {
+          const labels = [];
+          const contributions = [];
+          const netGrowth = [];
+          const lostToFees = [];
+          const noAumBalanceSeries = [];
+          const finalBalanceSeries = [];
+
+          // Exact Real Return calculations for each scenario
+          const realNoFeeAnnual = (1 + gross) / (1 + inflation) - 1;
+          const realNoAumAnnual = (1 + gross - expense) / (1 + inflation) - 1;
+          const realWithFeesAnnual = (1 + gross - expense - aum) / (1 + inflation) - 1;
+
+          let balNoFees = startingBalance;
+          let balNoAum = startingBalance;
+          let balWithFees = startingBalance;
+          let contribSum = startingBalance;
+          for (let year = 1; year <= years; year++) {
+            for (let month = 1; month <= 12; month++) {
+              const monthlyContribution = annualContribution / 12;
+              const intNoFees = balNoFees * (Math.pow(1 + realNoFeeAnnual, 1 / 12) - 1);
+              balNoFees += intNoFees + monthlyContribution;
+              const intNoAum = balNoAum * (Math.pow(1 + realNoAumAnnual, 1 / 12) - 1);
+              balNoAum += intNoAum + monthlyContribution;
+              const intWithFees = balWithFees * (Math.pow(1 + realWithFeesAnnual, 1 / 12) - 1);
+              balWithFees += intWithFees + monthlyContribution;
+              contribSum += monthlyContribution;
+            }
+            labels.push('Year ' + year);
+            contributions.push(Math.round(contribSum));
+            netGrowth.push(Math.round(balWithFees - contribSum));
+            lostToFees.push(Math.round(balNoFees - balWithFees));
+            finalBalanceSeries.push(Math.round(balWithFees));
+            noAumBalanceSeries.push(Math.round(balNoAum));
+          }
+          const ctx = document.getElementById('compoundChart').getContext('2d');
+          if (window.myChart) {
+            window.myChart.destroy();
+          }
+          window.myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: 'Lost Growth to Fees',
+                  data: lostToFees,
+                  fill: true,
+                  backgroundColor: 'rgba(239,68,68,0.32)',
+                  borderColor: 'rgba(239,68,68,1)',
+                  pointRadius: 0,
+                  stack: 'Stack 0',
+                  order: 3,
+                },
+                {
+                  label: 'Net Growth After Fees',
+                  data: netGrowth,
+                  fill: true,
+                  backgroundColor: 'rgba(34,197,94,0.32)',
+                  borderColor: 'rgba(34,197,94,1)',
+                  pointRadius: 0,
+                  stack: 'Stack 0',
+                  order: 2,
+                },
+                {
+                  label: 'Contributions',
+                  data: contributions,
+                  fill: true,
+                  backgroundColor: 'rgba(71,85,105,0.32)',
+                  borderColor: 'rgba(71,85,105,1)',
+                  pointRadius: 0,
+                  stack: 'Stack 0',
+                  order: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              interaction: { mode: 'index', intersect: false },
+              plugins: {
+                tooltip: {
+                  itemSort: (a, b) => {
+                    const rankByLabel = {
+                      Contributions: 0,
+                      'Lost Growth to Fees': 1,
+                      'Net Growth After Fees': 2,
+                    };
+                    const getRank = (item) => rankByLabel[item.dataset.label] ?? 99;
+                    return getRank(a) - getRank(b);
+                  },
+                  callbacks: {
+                    label: (ctx) => ctx.dataset.label + ': $' + ctx.parsed.y.toLocaleString(),
+                    footer: (items) => {
+                      if (!items.length) return '';
+                      const pointIndex = items[0].dataIndex;
+                      const finalBalance = finalBalanceSeries[pointIndex] || 0;
+                      const noAumBalance = noAumBalanceSeries[pointIndex] || 0;
+                      return [
+                        'Final Balance: $' + finalBalance.toLocaleString(),
+                        'No AUM Balance: $' + noAumBalance.toLocaleString(),
+                      ];
+                    },
+                  },
+                },
+                legend: {
+                  position: 'top',
+                  labels: {
+                    boxWidth: 18,
+                    font: { size: 13 },
+                    sort: (a, b) => {
+                      const rankByLabel = {
+                        Contributions: 0,
+                        'Lost Growth to Fees': 1,
+                        'Net Growth After Fees': 2,
+                      };
+                      const getRank = (item) => rankByLabel[item.text] ?? 99;
+                      return getRank(a) - getRank(b);
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: { title: { display: true, text: 'Year', font: { size: 14 } } },
+                y: {
+                  title: { display: true, text: 'Total Value ($)', font: { size: 14 } },
+                  beginAtZero: true,
+                  stacked: true,
+                  ticks: { callback: (v) => '$' + v.toLocaleString() },
+                },
+              },
+            },
+          });
+        }
+
+        function initCompoundCalculator() {
+          document.getElementById('calc-form').onsubmit = function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.inline-error').forEach((el) => el.remove());
+            document
+              .querySelectorAll('.input-error')
+              .forEach((el) => el.classList.remove('input-error'));
+            let hasError = false;
+            // Helper to show error
+            function showError(input, message) {
+              const errorDiv = document.createElement('div');
+              errorDiv.className = 'inline-error';
+              errorDiv.innerHTML = `<img src="Icons/icons8-error-50.png" alt="Error" style="width:1.1em;vertical-align:middle;margin-right:0.3em;"> <span>${message}</span>`;
+              errorDiv.style.color = '#dc2626';
+              errorDiv.style.fontWeight = '500';
+              errorDiv.style.marginBottom = '0.2em';
+              errorDiv.style.display = 'flex';
+              errorDiv.style.alignItems = 'center';
+              errorDiv.style.gap = '0.3em';
+              errorDiv.style.fontSize = '1em';
+              input.parentNode.insertBefore(errorDiv, input);
+            }
+            // Validate required fields
+            const startingInput = document.getElementById('starting');
+            const returnInput = document.getElementById('return');
+            const yearsInput = document.getElementById('years');
+            let startingBalance = parseFloat(startingInput.value.replace(/,/g, ''));
+            let grossAnnualReturn = parseFloat(returnInput.value);
+            let years = parseInt(yearsInput.value, 10);
+            if (!startingInput.value.trim()) {
+              showError(startingInput, 'This field cannot be blank');
+              hasError = true;
+            }
+            if (!returnInput.value.trim()) {
+              showError(returnInput, 'This field cannot be blank');
+              hasError = true;
+            }
+            if (!yearsInput.value.trim()) {
+              showError(yearsInput, 'This field cannot be blank');
+              hasError = true;
+            }
+            if (hasError) return;
+            startingBalance = startingBalance || 0;
+            grossAnnualReturn = grossAnnualReturn || 0;
+            years = years || 0;
+            const annualContribution =
+              parseFloat(document.getElementById('contribution').value.replace(/,/g, '')) || 0;
+            const expenseRatio = parseFloat(document.getElementById('expense').value) || 0;
+            const aumFee = parseFloat(document.getElementById('aum').value) || 0;
+            const inflation = parseFloat(document.getElementById('inflation').value) || 0;
+            const results = calculateCompound({
+              startingBalance,
+              annualContribution,
+              grossAnnualReturn,
+              expenseRatio,
+              aumFee,
+              years,
+              inflation,
+            });
+            const resultsDiv = document.getElementById('results');
+            // Calculate total fees lost
+            const gross = grossAnnualReturn / 100;
+            const expense = expenseRatio / 100;
+            const aum = aumFee / 100;
+            const inflationRate = inflation / 100;
+            const effectiveAnnual = (1 + gross - expense - aum) / (1 + inflationRate) - 1;
+            // Simulate no-fee scenario
+            let balanceNoFees = startingBalance;
+            let balanceExpenseOnly = startingBalance;
+            let balanceAumOnly = startingBalance;
+            let balanceBothFees = startingBalance;
+
+            const rNoFees = (1 + gross) / (1 + inflationRate) - 1;
+            const rExpenseOnly = (1 + gross - expense) / (1 + inflationRate) - 1;
+            const rAumOnly = (1 + gross - aum) / (1 + inflationRate) - 1;
+            const rBothFees = (1 + gross - expense - aum) / (1 + inflationRate) - 1;
+
+            for (let year = 1; year <= years; year++) {
+              for (let month = 1; month <= 12; month++) {
+                const monthlyContribution = annualContribution / 12;
+                // No fees
+                const interestNoFees = balanceNoFees * (Math.pow(1 + rNoFees, 1 / 12) - 1);
+                balanceNoFees += interestNoFees + monthlyContribution;
+                // Expense ratio only
+                const interestExpenseOnly =
+                  balanceExpenseOnly * (Math.pow(1 + rExpenseOnly, 1 / 12) - 1);
+                balanceExpenseOnly += interestExpenseOnly + monthlyContribution;
+                // AUM only
+                const interestAumOnly = balanceAumOnly * (Math.pow(1 + rAumOnly, 1 / 12) - 1);
+                balanceAumOnly += interestAumOnly + monthlyContribution;
+                // Both fees
+                const interestBothFees = balanceBothFees * (Math.pow(1 + rBothFees, 1 / 12) - 1);
+                balanceBothFees += interestBothFees + monthlyContribution;
+              }
+            }
+            // Proportional attribution logic
+            const feesLost = balanceNoFees - balanceBothFees;
+            let impactExpense = 0,
+              impactAum = 0;
+            const totalFee = expense + aum;
+            if (totalFee > 0) {
+              impactExpense = feesLost * (expense / totalFee);
+              impactAum = feesLost * (aum / totalFee);
+            }
+            resultsDiv.innerHTML = `
         <div style="margin-bottom:0.7em;font-size:0.97em;color:#475569;">Over ${years} years at ${formatPercent(results.effectiveAnnual)} effective annual return:</div>
         <div><strong>Total Contributions:</strong><span style="padding-left:10px;">${formatCurrency(results.totalContributions)}</span></div>
-        <div style="margin-top:8px;"><strong>Total Interest Earned:</strong><span style="padding-left:10px;">${formatCurrency(results.totalInterest)}</span></div>
+        <div style="margin-top:8px;"><strong>Total Net Growth (After Fees):</strong><span style="padding-left:10px;">${formatCurrency(results.totalInterest)}</span></div>
         <div style="margin-top:8px;"><strong>Final Balance:</strong><span style="padding-left:10px;">${formatCurrency(results.finalBalance)}</span></div>
         <div style="font-size:0.97em;color:#334155;font-weight:600;margin-top:1.1em;margin-bottom:0.2em;display:flex;align-items:center;gap:0.05em;">Expenses and Fees Breakdown<span class="info-icon" id="fees-info-icon" tabindex="0" role="button" aria-label="More info"></span></div>
         <div style="margin-left:1.2em;">
@@ -839,77 +1745,404 @@
         </div>
       `;
 
-      // Add chart container after results summary
-      resultsDiv.innerHTML += `
+            // Add chart container after results summary
+            resultsDiv.innerHTML += `
         <div class="chart-container">
           <canvas id="compoundChart"></canvas>
         </div>
       `;
 
-      // Load Chart.js and render the chart
-      loadChartJs(function() {
-        renderCompoundChartForCompoundMe(startingBalance, annualContribution, gross, expense, aum, inflationDecimal, years);
-      });
+            // Load Chart.js and render the chart
+            loadChartJs(function () {
+              renderCompoundChartForCompoundMe(
+                startingBalance,
+                annualContribution,
+                gross,
+                expense,
+                aum,
+                inflationRate,
+                years,
+              );
+            });
 
-      // Remove any existing fee modals
-      document.querySelectorAll('.fee-modal-backdrop').forEach(e => e.remove());
+            // Remove any existing fee modals
+            document.querySelectorAll('.fee-modal-backdrop').forEach((e) => e.remove());
 
-      // Add event listener for the single info icon (wait for DOM update)
-      setTimeout(() => {
-        const feesInfoIcon = document.getElementById('fees-info-icon');
-        if (feesInfoIcon) {
-          feesInfoIcon.addEventListener('click', function(e) {
-            e.stopPropagation();
-            // Remove any existing modal
-            document.querySelectorAll('.fee-modal-backdrop').forEach(e => e.remove());
-            // Create modal backdrop
-            const backdrop = document.createElement('div');
-            backdrop.className = 'fee-modal-backdrop';
-            backdrop.style.position = 'fixed';
-            backdrop.style.top = '0';
-            backdrop.style.left = '0';
-            backdrop.style.width = '100vw';
-            backdrop.style.height = '100vh';
-            backdrop.style.background = 'rgba(30,41,59,0.18)';
-            backdrop.style.zIndex = '9999';
-            backdrop.style.display = 'flex';
-            backdrop.style.alignItems = 'center';
-            backdrop.style.justifyContent = 'center';
-            // Create modal
-            const modal = document.createElement('div');
-            modal.className = 'fee-modal';
-            modal.style.background = '#fff';
-            modal.style.borderRadius = '12px';
-            modal.style.boxShadow = '0 4px 24px 0 #0002';
-            modal.style.padding = '1.5em 1.3em 1.2em 1.3em';
-            modal.style.maxWidth = '340px';
-            modal.style.width = '92vw';
-            modal.style.color = '#1e293b';
-            modal.style.fontSize = '1.04em';
-            modal.innerHTML = `
+            // Add event listener for the single info icon (wait for DOM update)
+            setTimeout(() => {
+              const feesInfoIcon = document.getElementById('fees-info-icon');
+              if (feesInfoIcon) {
+                feesInfoIcon.addEventListener('click', function (e) {
+                  e.stopPropagation();
+                  // Remove any existing modal
+                  document.querySelectorAll('.fee-modal-backdrop').forEach((e) => e.remove());
+                  // Create modal backdrop
+                  const backdrop = document.createElement('div');
+                  backdrop.className = 'fee-modal-backdrop';
+                  backdrop.style.position = 'fixed';
+                  backdrop.style.top = '0';
+                  backdrop.style.left = '0';
+                  backdrop.style.width = '100vw';
+                  backdrop.style.height = '100vh';
+                  backdrop.style.background = 'rgba(30,41,59,0.18)';
+                  backdrop.style.zIndex = '9999';
+                  backdrop.style.display = 'flex';
+                  backdrop.style.alignItems = 'center';
+                  backdrop.style.justifyContent = 'center';
+                  // Create modal
+                  const modal = document.createElement('div');
+                  modal.className = 'fee-modal';
+                  modal.style.background = '#fff';
+                  modal.style.borderRadius = '12px';
+                  modal.style.boxShadow = '0 4px 24px 0 #0002';
+                  modal.style.padding = '1.5em 1.3em 1.2em 1.3em';
+                  modal.style.maxWidth = '340px';
+                  modal.style.width = '92vw';
+                  modal.style.color = '#1e293b';
+                  modal.style.fontSize = '1.04em';
+                  modal.innerHTML = `
               <div style="font-weight:600;font-size:1.08em;margin-bottom:0.7em;">Fee & Expense Breakdown</div>
               <div style="margin-bottom:0.7em;"><strong>Lost to Exp Ratio:</strong> The expense ratio is an annual fee, expressed as a percentage of your investment, that covers the fund's operating costs. This is deducted from your investment returns.</div>
               <div style="margin-bottom:0.7em;"><strong>Lost to AUM Fee:</strong> The AUM (Assets Under Management) fee is a percentage-based fee charged by advisors or platforms for managing your investments. This is also deducted from your returns.</div>
               <div><strong>Total Lost to Fees and Expenses:</strong> This is the total amount lost to both expense ratio and AUM fees over the investment period.</div>
               <button id="close-fee-modal" style="margin-top:1.3em;padding:0.6em 1.2em;border:none;border-radius:7px;background:#18181b;color:#fff;font-size:1em;cursor:pointer;width:100%;font-weight:600;">Close</button>
             `;
-            backdrop.appendChild(modal);
-            document.body.appendChild(backdrop);
-            // Close modal on button click or backdrop click
-            document.getElementById('close-fee-modal').onclick = () => backdrop.remove();
-            backdrop.onclick = (ev) => { if (ev.target === backdrop) backdrop.remove(); };
-          });
-          // For accessibility: show modal on Enter/Space
-          feesInfoIcon.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-              feesInfoIcon.click();
-            }
-          });
+                  backdrop.appendChild(modal);
+                  document.body.appendChild(backdrop);
+                  // Close modal on button click or backdrop click
+                  document.getElementById('close-fee-modal').onclick = () => backdrop.remove();
+                  backdrop.onclick = (ev) => {
+                    if (ev.target === backdrop) backdrop.remove();
+                  };
+                });
+                // For accessibility: show modal on Enter/Space
+                feesInfoIcon.addEventListener('keydown', function (e) {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    feesInfoIcon.click();
+                  }
+                });
+              }
+            }, 0);
+            resultsDiv.style.display = 'block';
+          };
         }
-      }, 0);
-      resultsDiv.style.display = 'block';
-    };
-    }
-  </script>
-</body>
+
+        // --- Monte Carlo Calculator Logic ---
+        function initMonteCarloCalculator() {
+          const form = document.getElementById('monte-carlo-form');
+          const resultsDiv = document.getElementById('mc-results');
+          const visualsDiv = document.getElementById('mc-visuals');
+
+          // Info icon modal for Volatility
+          setTimeout(() => {
+            const volatilityIcon = document.getElementById('volatility-info-icon');
+            if (volatilityIcon) {
+              volatilityIcon.addEventListener('click', function (e) {
+                e.stopPropagation();
+                document.querySelectorAll('.fee-modal-backdrop').forEach((e) => e.remove());
+
+                const backdrop = document.createElement('div');
+                backdrop.className = 'fee-modal-backdrop';
+                backdrop.style.position = 'fixed';
+                backdrop.style.top = '0';
+                backdrop.style.left = '0';
+                backdrop.style.width = '100vw';
+                backdrop.style.height = '100vh';
+                backdrop.style.background = 'rgba(30,41,59,0.18)';
+                backdrop.style.zIndex = '9999';
+                backdrop.style.display = 'flex';
+                backdrop.style.alignItems = 'center';
+                backdrop.style.justifyContent = 'center';
+
+                const modal = document.createElement('div');
+                modal.className = 'fee-modal';
+                modal.style.background = '#fff';
+                modal.style.borderRadius = '12px';
+                modal.style.boxShadow = '0 4px 24px 0 #0002';
+                modal.style.padding = '1.5em 1.3em 1.2em 1.3em';
+                modal.style.maxWidth = '340px';
+                modal.style.width = '92vw';
+                modal.style.color = '#1e293b';
+                modal.style.fontSize = '1.04em';
+                modal.innerHTML = `
+                  <div style="font-weight:600;font-size:1.08em;margin-bottom:0.7em;">Volatility / Standard Deviation</div>
+                  <div style="margin-bottom:0.7em;">Volatility is a measure of how much your investment returns fluctuate year to year.</div>
+                  <div style="margin-bottom:0.7em;">In this simulation, a <strong>15% volatility</strong> means that roughly 68% of the time, the randomized annual return will fall within +/- 15% of your expected return.</div>
+                  <button id="close-volatility-modal" style="margin-top:1.3em;padding:0.6em 1.2em;border:none;border-radius:7px;background:#18181b;color:#fff;font-size:1em;cursor:pointer;width:100%;font-weight:600;">Close</button>
+                `;
+                backdrop.appendChild(modal);
+                document.body.appendChild(backdrop);
+
+                document.getElementById('close-volatility-modal').onclick = () => backdrop.remove();
+                backdrop.onclick = (ev) => {
+                  if (ev.target === backdrop) backdrop.remove();
+                };
+              });
+
+              volatilityIcon.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  volatilityIcon.click();
+                }
+              });
+            }
+          }, 0);
+
+          // Box-Muller transform for normal distribution
+          function randomNormal(mean, stdDev) {
+            let u = 0,
+              v = 0;
+            while (u === 0) u = Math.random(); // Converting [0,1) to (0,1)
+            while (v === 0) v = Math.random();
+            let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+            return num * stdDev + mean;
+          }
+
+          const ASSET_PROPERTIES = {
+            'us-large': { r: 10, v: 15 },
+            'us-small': { r: 12, v: 20 },
+            'us-stock-market': { r: 10, v: 15.5 },
+            'intl-stocks': { r: 8, v: 16 },
+            'ex-us-stock-market': { r: 8, v: 16 },
+            'us-bonds': { r: 4.5, v: 5 },
+            'ex-us-bonds': { r: 4, v: 5.5 },
+            cash: { r: 3, v: 1 },
+            none: { r: 0, v: 0 },
+          };
+
+          let currentCalculatedReturn = 0;
+          let currentCalculatedVolatility = 0;
+
+          function updateAssetCalculations() {
+            /** @type {NodeListOf<HTMLSelectElement>} */
+            const types = document.querySelectorAll('#monte-carlo-form .asset-type');
+            /** @type {NodeListOf<HTMLInputElement>} */
+            const weights = document.querySelectorAll('#monte-carlo-form .asset-weight');
+
+            let totalWeight = 0;
+            let weightedReturn = 0;
+            let weightedVar = 0;
+
+            types.forEach((select, idx) => {
+              const weight = parseFloat(weights[idx].value) || 0;
+              const type = select.value;
+              const r = ASSET_PROPERTIES[type].r;
+              const v = ASSET_PROPERTIES[type].v;
+
+              totalWeight += weight;
+              weightedReturn += (weight / 100) * r;
+              weightedVar += (weight / 100) * v;
+            });
+
+            const errorMsg = document.getElementById('allocation-error');
+            if (Math.abs(totalWeight - 100) > 0.01) {
+              errorMsg.style.display = 'block';
+              document.getElementById('calculated-return').textContent = '—';
+              document.getElementById('calculated-volatility').textContent = '—';
+              currentCalculatedReturn = null;
+              currentCalculatedVolatility = null;
+            } else {
+              errorMsg.style.display = 'none';
+              currentCalculatedReturn = weightedReturn;
+              currentCalculatedVolatility = weightedVar;
+              document.getElementById('calculated-return').textContent = weightedReturn.toFixed(2);
+              document.getElementById('calculated-volatility').textContent = weightedVar.toFixed(2);
+            }
+          }
+
+          document
+            .querySelectorAll('#monte-carlo-form .asset-type, #monte-carlo-form .asset-weight')
+            .forEach((el) => {
+              el.addEventListener('input', updateAssetCalculations);
+              el.addEventListener('change', updateAssetCalculations);
+            });
+
+          updateAssetCalculations();
+
+          form.onsubmit = async function (e) {
+            e.preventDefault();
+
+            if (currentCalculatedReturn === null || currentCalculatedVolatility === null) {
+              alert('Total allocation must equal 100%.');
+              return;
+            }
+
+            resultsDiv.innerHTML = 'Calculating simulations...';
+            resultsDiv.style.display = 'block';
+            visualsDiv.innerHTML = '';
+
+            const startingValue = sanitizeNumericString(
+              document.getElementById('mc-starting').value,
+            );
+            const withdrawalValue = sanitizeNumericString(
+              document.getElementById('mc-withdrawal').value,
+            );
+            const yearsValue = sanitizeNumericString(
+              document.getElementById('mc-years').value,
+              true,
+            );
+            const nominalReturnValue = currentCalculatedReturn.toString();
+            const inflationValue = document.getElementById('mc-inflation').value || '0';
+            const volatilityValue = currentCalculatedVolatility.toString();
+
+            const starting = parseFloat(startingValue);
+            const initialWithdrawal = parseFloat(withdrawalValue);
+            const years = parseInt(yearsValue, 10);
+            const nominalReturn = parseFloat(nominalReturnValue) / 100;
+            const inflation = parseFloat(inflationValue) / 100;
+            const stdDev = parseFloat(volatilityValue) / 100;
+
+            if (
+              isNaN(starting) ||
+              isNaN(initialWithdrawal) ||
+              isNaN(years) ||
+              isNaN(nominalReturn) ||
+              isNaN(stdDev) ||
+              years <= 0
+            ) {
+              resultsDiv.innerHTML =
+                '<div style="color:#ef4444;font-weight:500;">Please fill out all required fields with valid numbers.</div>';
+              return;
+            }
+
+            const numSims = 1000;
+            let successCount = 0;
+            const allPaths = [];
+
+            for (let i = 0; i < numSims; i++) {
+              let balance = starting;
+              let currentWithdrawal = initialWithdrawal;
+              const path = [balance];
+              let failed = false;
+
+              for (let y = 1; y <= years; y++) {
+                const yearReturn = randomNormal(nominalReturn, stdDev);
+                // Withdraw at start of year, then grow the remainder
+                balance -= currentWithdrawal;
+                if (balance <= 0) {
+                  balance = 0;
+                  failed = true;
+                } else {
+                  balance = balance * (1 + yearReturn);
+                }
+                path.push(balance);
+
+                // Adjust withdrawal for next year based on inflation
+                currentWithdrawal = currentWithdrawal * (1 + inflation);
+              }
+              if (!failed) successCount++;
+              allPaths.push(path);
+            }
+
+            const successRate = (successCount / numSims) * 100;
+
+            // Calculate 10th, 50th, 90th percentile paths
+            const p10Path = [];
+            const p50Path = [];
+            const p90Path = [];
+
+            for (let y = 0; y <= years; y++) {
+              const balancesAtYear = allPaths.map((p) => p[y]).sort((a, b) => a - b);
+              p10Path.push(balancesAtYear[Math.floor(numSims * 0.1)]);
+              p50Path.push(balancesAtYear[Math.floor(numSims * 0.5)]);
+              p90Path.push(balancesAtYear[Math.floor(numSims * 0.9)]);
+            }
+
+            resultsDiv.innerHTML = `
+              <div class="result-label">Probability of Success</div>
+              <div class="result-value" style="color: ${successRate >= 90 ? '#16a34a' : successRate >= 75 ? '#ca8a04' : '#ef4444'}">${successRate.toFixed(1)}%</div>
+              <div style="font-size: 0.9em; margin-top: 0.5em; color: #475569;">
+                In ${successCount} out of ${numSims} simulated scenarios, your portfolio survived for ${years} years without running out of money.
+              </div>
+            `;
+
+            // Draw chart
+            visualsDiv.innerHTML =
+              '<div class="chart-container"><canvas id="mc-chart"></canvas></div>';
+            if (typeof Chart === 'undefined') {
+              try {
+                await loadChartJs();
+              } catch (err) {
+                visualsDiv.innerHTML =
+                  '<div style="color:#ef4444;font-weight:500;">Failed to load Chart.js</div>';
+                return;
+              }
+            }
+
+            const ctx = document.getElementById('mc-chart').getContext('2d');
+            const labels = Array.from({ length: years + 1 }, (_, i) => `Year ${i}`);
+
+            new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: '90th Percentile (Optimistic)',
+                    data: p90Path,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0,
+                  },
+                  {
+                    label: '50th Percentile (Median)',
+                    data: p50Path,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0,
+                  },
+                  {
+                    label: '10th Percentile (Pessimistic)',
+                    data: p10Path,
+                    borderColor: '#ef4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                plugins: {
+                  legend: {
+                    position: 'top',
+                    labels: { boxWidth: 12, usePointStyle: true },
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: function (context) {
+                        return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                      },
+                    },
+                  },
+                },
+                scales: {
+                  x: { grid: { display: false } },
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      callback: function (value) {
+                        if (value >= 1e6) return '$' + (value / 1e6).toFixed(1) + 'M';
+                        if (value >= 1e3) return '$' + (value / 1e3).toFixed(0) + 'k';
+                        return '$' + value;
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          };
+        }
+      </script>
+    </div>
+  </body>
 </html>
